@@ -4,6 +4,7 @@ import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
 import com.chapaTuBus.webService.userAccount.domain.model.commands.RegisterUserCommand;
 import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.RoleRepository;
 import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.UserRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
@@ -21,9 +22,12 @@ public class RegisterUserCommandHandler{
     public Optional<User> handle(RegisterUserCommand command){
         if(userRepository.existsByEmail(command.email())) throw new RuntimeException("Email logged already exists");
 
-        User user = new User();
+        var user= new User(command.email(),command.password(),command.role());
+
         user.setEmail(command.email());
         user.setPassword(command.password());
+        user.setRole(command.role());
+
         userRepository.save(user);
         return userRepository.findByEmail(user.getEmail());
     }

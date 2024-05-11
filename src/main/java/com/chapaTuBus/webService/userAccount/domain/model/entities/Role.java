@@ -24,11 +24,11 @@ public class Role {
     @Getter
     @Enumerated(EnumType.STRING)
     @Column(length = 30)
-    private Roles name;
+    private Roles type;
 
-    public Role(Roles name) {this.name=name;}
+    public Role(Roles type) {this.type=type;}
 
-    public String getStringName(){return name.name();}
+    public String getStringName(){return type.name();}
 
     public static Role getDefaultRole(){
         return new Role(Roles.ROLE_USER);

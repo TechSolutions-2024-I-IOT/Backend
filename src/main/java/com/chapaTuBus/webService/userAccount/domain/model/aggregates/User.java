@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,4 +44,9 @@ public class User {
     private Role role;
 
 
+    public User(String email, String password, Role role) {
+        this.email=email;
+        this.password=password;
+        this.role=role;
+    }
 }
