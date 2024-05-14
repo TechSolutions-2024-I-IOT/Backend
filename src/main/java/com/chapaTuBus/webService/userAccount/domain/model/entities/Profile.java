@@ -2,6 +2,7 @@ package com.chapaTuBus.webService.userAccount.domain.model.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
@@ -11,14 +12,9 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-
+@Data
 @Embeddable
 public class Profile {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     private String first_name;
     private String last_name;

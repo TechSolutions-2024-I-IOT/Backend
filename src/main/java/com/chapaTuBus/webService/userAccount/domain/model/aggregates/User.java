@@ -1,5 +1,6 @@
 package com.chapaTuBus.webService.userAccount.domain.model.aggregates;
 
+import com.chapaTuBus.webService.userAccount.domain.model.commands.RegisterUserCommand;
 import com.chapaTuBus.webService.userAccount.domain.model.entities.Profile;
 import com.chapaTuBus.webService.userAccount.domain.model.entities.Role;
 import jakarta.persistence.*;
@@ -48,5 +49,20 @@ public class User {
         this.email=email;
         this.password=password;
         this.role=role;
+    }
+
+    public static User signUp(RegisterUserCommand command){
+        return new User(command.email(),command.password(),command.role());
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Date();
     }
 }

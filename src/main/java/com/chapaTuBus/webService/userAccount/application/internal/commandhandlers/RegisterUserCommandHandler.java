@@ -1,35 +1,25 @@
 package com.chapaTuBus.webService.userAccount.application.internal.commandhandlers;
 
-import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
 import com.chapaTuBus.webService.userAccount.domain.model.commands.RegisterUserCommand;
-import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.RoleRepository;
-import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.UserRepository;
+import com.chapaTuBus.webService.userAccount.domain.services.AuthenticationService;
+import com.chapaTuBus.webService.userAccount.domain.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
+@Service
 public class RegisterUserCommandHandler{
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
 
-    public RegisterUserCommandHandler(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+    private final AuthenticationService authenticationService;
 
+    @Autowired
+    public RegisterUserCommandHandler(AuthenticationService authenticationService){
+        this.authenticationService = authenticationService;
     }
 
-    public Optional<User> handle(RegisterUserCommand command){
-        if(userRepository.existsByEmail(command.email())) throw new RuntimeException("Email logged already exists");
-
-        var user= new User(command.email(),command.password(),command.role());
-
-        user.setEmail(command.email());
-        user.setPassword(command.password());
-        user.setRole(command.role());
-
-        userRepository.save(user);
-        return userRepository.findByEmail(user.getEmail());
+    public void handle(RegisterUserCommand command){
+        authenticationService.signUp(command);
     }
 
 
