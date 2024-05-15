@@ -1,6 +1,6 @@
 package com.chapaTuBus.webService.userAccount.domain.model.aggregates;
 
-import com.chapaTuBus.webService.userAccount.domain.model.commands.RegisterUserCommand;
+import com.chapaTuBus.webService.userAccount.domain.model.commands.auth.RegisterUserCommand;
 import com.chapaTuBus.webService.userAccount.domain.model.entities.Profile;
 import com.chapaTuBus.webService.userAccount.domain.model.entities.Role;
 import jakarta.persistence.*;
@@ -11,7 +11,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 
 import java.util.Date;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,7 +1,7 @@
 package com.chapaTuBus.webService.userAccount.interfaces.rest;
 
 import com.chapaTuBus.webService.userAccount.application.internal.commandhandlers.RegisterUserCommandHandler;
-import com.chapaTuBus.webService.userAccount.domain.model.commands.RegisterUserCommand;
+import com.chapaTuBus.webService.userAccount.domain.model.commands.auth.RegisterUserCommand;
 import com.chapaTuBus.webService.userAccount.interfaces.rest.resources.RegisterUserResource;
 import com.chapaTuBus.webService.userAccount.interfaces.rest.transform.RegisterUserCommandFromResourceAssembler;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +21,8 @@ public class AuthenticationController {
     }
 
 
-    @PostMapping
-    public ResponseEntity<?> registerUser(@RequestBody RegisterUserResource registerUserResource) {
+    @PostMapping("signUp")
+    public ResponseEntity<?> signUp(@RequestBody RegisterUserResource registerUserResource) {
         RegisterUserCommand command = RegisterUserCommandFromResourceAssembler.toCommandFromResource(registerUserResource);
         registerUserCommandHandler.handle(command);
         return ResponseEntity.ok("User registered successfully");

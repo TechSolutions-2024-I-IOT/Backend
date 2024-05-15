@@ -1,8 +1,7 @@
 package com.chapaTuBus.webService.userAccount.application.internal.commandhandlers;
 
-import com.chapaTuBus.webService.userAccount.domain.model.commands.RegisterUserCommand;
-import com.chapaTuBus.webService.userAccount.domain.services.AuthenticationService;
-import com.chapaTuBus.webService.userAccount.domain.services.UserService;
+import com.chapaTuBus.webService.userAccount.domain.model.commands.auth.RegisterUserCommand;
+import com.chapaTuBus.webService.userAccount.application.internal.services.AuthenticationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +10,10 @@ import org.springframework.stereotype.Service;
 public class RegisterUserCommandHandler{
 
 
-    private final AuthenticationService authenticationService;
+    private final AuthenticationServiceImpl authenticationService;
 
     @Autowired
-    public RegisterUserCommandHandler(AuthenticationService authenticationService){
+    public RegisterUserCommandHandler(AuthenticationServiceImpl authenticationService){
         this.authenticationService = authenticationService;
     }
 
