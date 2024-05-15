@@ -1,4 +1,4 @@
-package com.chapaTuBus.webService.userAccount.application.internal.services;
+package com.chapaTuBus.webService.userAccount.application.internal.commandservices;
 
 import org.springframework.stereotype.Service;
 

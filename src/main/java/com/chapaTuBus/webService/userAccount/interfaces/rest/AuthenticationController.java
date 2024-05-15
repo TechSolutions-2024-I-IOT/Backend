@@ -15,15 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final RegisterUserCommandHandler registerUserCommandHandler;
+    private final RegisterUserCommandFromResourceAssembler assembler; // Inyecta el assembler
 
-    public AuthenticationController(RegisterUserCommandHandler registerUserCommandHandler) {
+    public AuthenticationController(RegisterUserCommandHandler registerUserCommandHandler,
+                                    RegisterUserCommandFromResourceAssembler assembler) {
         this.registerUserCommandHandler = registerUserCommandHandler;
+        this.assembler = assembler;
     }
+
 
 
     @PostMapping("signUp")
     public ResponseEntity<?> signUp(@RequestBody RegisterUserResource registerUserResource) {
-        RegisterUserCommand command = RegisterUserCommandFromResourceAssembler.toCommandFromResource(registerUserResource);
+        // Llama al método desde la instancia inyectada
+        RegisterUserCommand command = assembler.toCommandFromResource(registerUserResource);
         registerUserCommandHandler.handle(command);
         return ResponseEntity.ok("User registered successfully");
     }

@@ -1,4 +1,4 @@
-package com.chapaTuBus.webService.shared.infraestructure.initializer;
+package com.chapaTuBus.webService.userAccount.infraestructure.configuration;
 
 import com.chapaTuBus.webService.userAccount.domain.model.entities.Role;
 import com.chapaTuBus.webService.userAccount.domain.model.valueobjects.Roles;

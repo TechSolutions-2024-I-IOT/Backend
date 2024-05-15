@@ -1,6 +1,4 @@
 package com.chapaTuBus.webService.userAccount.domain.services;
-
-import com.chapaTuBus.webService.userAccount.domain.model.commands.roles.CreateRoleCommand;
 import com.chapaTuBus.webService.userAccount.domain.model.entities.Role;
 import com.chapaTuBus.webService.userAccount.domain.model.valueobjects.Roles;
 

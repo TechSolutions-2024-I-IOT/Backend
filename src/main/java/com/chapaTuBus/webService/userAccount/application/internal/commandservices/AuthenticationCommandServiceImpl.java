@@ -1,18 +1,18 @@
-package com.chapaTuBus.webService.userAccount.application.internal.services;
+package com.chapaTuBus.webService.userAccount.application.internal.commandservices;
 
 import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
 import com.chapaTuBus.webService.userAccount.domain.model.commands.auth.RegisterUserCommand;
-import com.chapaTuBus.webService.userAccount.domain.services.AuthenticationService;
+import com.chapaTuBus.webService.userAccount.domain.services.AuthenticationCommandService;
 import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class AuthenticationCommandServiceImpl implements AuthenticationCommandService {
 
     private final UserRepository userRepository;
 
-    public AuthenticationServiceImpl(UserRepository userRepository) {
+    public AuthenticationCommandServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
