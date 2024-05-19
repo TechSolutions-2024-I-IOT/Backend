@@ -1,6 +1,5 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
-import com.chapaTuBus.webService.planification.domain.model.valueobjects.ContactInformation;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,9 +17,15 @@ public class Driver {
 
     private String driverLicenseNumber;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "contact_information_id",referencedColumnName = "id")
-    private ContactInformation contactInformation;
+    private String dni;
 
+    private String photoUrl;
 
+    private String phoneNumber;
+
+    private String email;
+
+    
 }
+
+
