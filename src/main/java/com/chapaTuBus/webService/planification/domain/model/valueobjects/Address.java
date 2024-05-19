@@ -1,4 +1,4 @@
-package com.chapaTuBus.webService.planification.domain.model.entities;
+package com.chapaTuBus.webService.planification.domain.model.valueobjects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,14 +8,14 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Itinerary {
-
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String origin;
-
-    private double total_distance;
-
+    private String street;
+    private String city;
+    private String state;
+    private String postalCode;
+    private String country;
 }

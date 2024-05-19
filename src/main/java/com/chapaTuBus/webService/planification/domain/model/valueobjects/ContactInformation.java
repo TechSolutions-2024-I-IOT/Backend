@@ -1,4 +1,4 @@
-package com.chapaTuBus.webService.planification.domain.model.entities;
+package com.chapaTuBus.webService.planification.domain.model.valueobjects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,14 +8,14 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Itinerary {
-
+public class ContactInformation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String origin;
-
-    private double total_distance;
+    private String phoneNumber;
+    private String email;
+    private String secondaryEmail;
+    private String emergencyContactNumber;
 
 }
