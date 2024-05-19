@@ -1,8 +1,8 @@
-package com.chapaTuBus.webService.planification.domain.model.commands;
+package com.chapaTuBus.webService.planification.interfaces.rest.resources;
 
-public record RegisterDriverCommand(String firstName, String lastName, String driverLicenseNumber, String dni, String photoUrl,String phoneNumber, String email){
+public record RegisterDriverResource(String photoUrl, String firstName, String lastName, String dni, String driverLicenseNumber, String phoneNumber, String email) {
 
-    public RegisterDriverCommand{
+    public RegisterDriverResource{
         if(driverLicenseNumber == null || driverLicenseNumber.isEmpty()){
             throw new IllegalArgumentException("driverLicenseNumber cannot be null or empty");
         }
