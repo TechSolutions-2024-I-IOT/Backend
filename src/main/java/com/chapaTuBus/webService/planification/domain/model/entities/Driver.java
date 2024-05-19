@@ -1,10 +1,10 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.chapaTuBus.webService.planification.domain.model.valueobjects.ContactInformation;
+import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 public class Driver {
 
@@ -17,6 +17,10 @@ public class Driver {
     private String lastName;
 
     private String driverLicenseNumber;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "contact_information_id",referencedColumnName = "id")
+    private ContactInformation contactInformation;
 
 
 }

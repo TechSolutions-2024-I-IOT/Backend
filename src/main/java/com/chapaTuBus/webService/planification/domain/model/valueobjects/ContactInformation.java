@@ -1,9 +1,6 @@
 package com.chapaTuBus.webService.planification.domain.model.valueobjects;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -17,5 +14,11 @@ public class ContactInformation {
     private String email;
     private String secondaryEmail;
     private String emergencyContactNumber;
+
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+
 
 }

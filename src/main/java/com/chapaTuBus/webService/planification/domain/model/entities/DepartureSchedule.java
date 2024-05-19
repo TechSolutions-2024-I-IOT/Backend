@@ -20,4 +20,8 @@ public class DepartureSchedule {
     @OneToMany(mappedBy = "departureSchedule",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Departure> departures;
 
+    @ManyToOne
+    @JoinColumn(name = "bus_unit_id")
+    private UnitBus unitBus;
+
 }

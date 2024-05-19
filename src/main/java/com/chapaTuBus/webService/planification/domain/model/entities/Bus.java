@@ -13,7 +13,6 @@ public class Bus {
 
     private String licensePlate;
 
-
     @ManyToOne
     private BusModel busModel;
 

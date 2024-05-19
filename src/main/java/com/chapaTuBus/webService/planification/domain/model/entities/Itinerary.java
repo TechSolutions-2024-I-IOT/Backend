@@ -1,10 +1,9 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -16,6 +15,12 @@ public class Itinerary {
 
     private String origin;
 
+    private String destiny;
+
     private double total_distance;
+
+
+    @OneToMany(mappedBy = "itinerary",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Stop>stops;
 
 }

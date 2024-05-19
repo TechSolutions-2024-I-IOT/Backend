@@ -1,9 +1,6 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Stop {
@@ -19,5 +16,9 @@ public class Stop {
 
     private String longitude;
 
+
+    @ManyToOne
+    @JoinColumn(name = "itinerary_id")
+    private Itinerary itinerary;
 
 }
