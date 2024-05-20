@@ -5,7 +5,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.Registe
 
 public class RegisterDriverCommandFromResourceAssembler {
     public static RegisterDriverCommand toCommand(RegisterDriverResource registerDriverResource) {
-        return new RegisterDriverCommand(registerDriverResource.firstName(), registerDriverResource.lastName(), registerDriverResource.driverLicenseNumber(),
+        return new RegisterDriverCommand(registerDriverResource.transportCompanyId(),registerDriverResource.firstName(), registerDriverResource.lastName(), registerDriverResource.driverLicenseNumber(),
                 registerDriverResource.dni(), registerDriverResource.photoUrl(), registerDriverResource.phoneNumber(), registerDriverResource.email());
     }
 }

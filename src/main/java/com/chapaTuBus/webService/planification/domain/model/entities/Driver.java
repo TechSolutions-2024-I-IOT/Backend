@@ -1,9 +1,12 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
+import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 @Entity
 public class Driver {
 
@@ -25,7 +28,13 @@ public class Driver {
 
     private String email;
 
-    
+    @ManyToOne
+    @JoinColumn(name = "transport_company_id")
+    private TransportCompany transportCompany;
+
+    public Driver() {
+    }
+
 }
 
 
