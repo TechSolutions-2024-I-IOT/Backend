@@ -2,11 +2,15 @@ package com.chapaTuBus.webService.planification.domain.model.entities;
 
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Driver {
 
@@ -31,9 +35,6 @@ public class Driver {
     @ManyToOne
     @JoinColumn(name = "transport_company_id")
     private TransportCompany transportCompany;
-
-    public Driver() {
-    }
 
 }
 
