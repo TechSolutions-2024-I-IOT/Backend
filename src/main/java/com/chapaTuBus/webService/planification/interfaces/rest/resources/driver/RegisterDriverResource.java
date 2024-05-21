@@ -1,6 +1,6 @@
-package com.chapaTuBus.webService.planification.interfaces.rest.resources;
+package com.chapaTuBus.webService.planification.interfaces.rest.resources.driver;
 
-public record RegisterDriverResource(Long transportCompanyId,String photoUrl, String firstName, String lastName, String dni, String driverLicenseNumber, String phoneNumber, String email) {
+public record RegisterDriverResource(String photoUrl, String firstName, String lastName, String dni, String driverLicenseNumber, String phoneNumber, String email) {
 
     public RegisterDriverResource{
         if(driverLicenseNumber == null || driverLicenseNumber.isEmpty()){

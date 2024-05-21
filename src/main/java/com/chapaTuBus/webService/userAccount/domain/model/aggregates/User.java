@@ -1,5 +1,6 @@
 package com.chapaTuBus.webService.userAccount.domain.model.aggregates;
 
+import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import com.chapaTuBus.webService.userAccount.domain.model.commands.auth.RegisterUserCommand;
 import com.chapaTuBus.webService.userAccount.domain.model.entities.Profile;
 import com.chapaTuBus.webService.userAccount.domain.model.entities.Role;
@@ -11,7 +12,9 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -22,9 +25,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Embedded
-    private Profile profile;
 
     @CreatedDate
     @Column(nullable = false,updatable = false)
@@ -40,9 +40,17 @@ public class User {
 
     private String password;
 
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL)
+    private List<TransportCompany>transportCompanies;
 
     @PrePersist
     protected void onCreate() {
@@ -59,6 +67,7 @@ public class User {
         this.email= Strings.EMPTY;
         this.password= Strings.EMPTY;
         this.role=null;
+        this.transportCompanies=new ArrayList<>();
     }
 
     public User(String email, String password, Role role) {
@@ -68,10 +77,10 @@ public class User {
     }
 
     public User (RegisterUserCommand command){
-        //return new User(command.email(),command.password(),command.role());
         this.email=command.email();
         this.password=command.password();
         this.role=command.role();
+        this.transportCompanies= new ArrayList<>();
     }
 
 

@@ -1,17 +1,13 @@
 package com.chapaTuBus.webService.planification.interfaces.rest;
 
-import com.chapaTuBus.webService.planification.domain.model.commands.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.DriverRegisteredResource;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.RegisterDriverResource;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.DriverResourceFromEntityAssembler;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.RegisterDriverCommandFromResourceAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.DriverRegisteredResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.RegisterDriverResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.DriverResourceFromEntityAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.RegisterDriverCommandFromResourceAssembler;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -28,15 +24,14 @@ public class TransportCompanyController {
     }
 
     @PostMapping("drivers")
-        //Falta hacerlo Response Entity
-    ResponseEntity<DriverRegisteredResource> registerDriver(@RequestBody RegisterDriverResource registerDriverResource){
+    ResponseEntity<DriverRegisteredResource> registerDriver(@RequestParam (name = "transportCompanyId") Long transportCompanyId, @RequestBody RegisterDriverResource registerDriverResource){
 
-        //Intitialize Driver
+
         Optional<Driver> driver= transportCompanyCommandService.
-                //Ejecutamos el comando
-                handle(RegisterDriverCommandFromResourceAssembler.toCommand(registerDriverResource));
+                //Execute the command
+                handle(RegisterDriverCommandFromResourceAssembler.toCommand(transportCompanyId,registerDriverResource));
 
-        //Devolvemos
+        //Return
         return driver.map(actualDriver->
                 new ResponseEntity<>(DriverResourceFromEntityAssembler.toResourceFromEntity(actualDriver),CREATED))
                 .orElseGet(()->ResponseEntity.badRequest().build());

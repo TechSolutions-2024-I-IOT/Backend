@@ -1,7 +1,8 @@
 package com.chapaTuBus.webService.planification.application.internal.commandservices;
 
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
-import com.chapaTuBus.webService.planification.domain.model.commands.RegisterDriverCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
@@ -16,6 +17,15 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
 
     public TransportCompanyCommandServiceImpl(TransportCompanyRepository transportCompanyRepository) {
         this.transportCompanyRepository = transportCompanyRepository;
+    }
+
+    @Override
+    public Optional<TransportCompany> handle(CreateTransportCompanyCommand command) {
+
+        //Optional<TransportCompany> transportCompany
+        //Cuando se crea debe saber a cual user referenciarse , como hago eso?
+
+        return Optional.empty();
     }
 
     @Override
@@ -34,4 +44,6 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
         }
 
     }
+
+
 }

@@ -1,7 +1,7 @@
-package com.chapaTuBus.webService.planification.interfaces.rest.transform;
+package com.chapaTuBus.webService.planification.interfaces.rest.transform.driver;
 
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.DriverRegisteredResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.DriverRegisteredResource;
 
 public class DriverResourceFromEntityAssembler {
     public static DriverRegisteredResource toResourceFromEntity(Driver entity){

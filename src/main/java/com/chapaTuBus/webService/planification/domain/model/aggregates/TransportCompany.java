@@ -1,13 +1,13 @@
 package com.chapaTuBus.webService.planification.domain.model.aggregates;
 
-import com.chapaTuBus.webService.planification.domain.model.commands.RegisterDriverCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.model.entities.Itinerary;
 import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
+import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
@@ -24,9 +24,13 @@ public class TransportCompany {
     private Long id;
 
     private String name;
-    private String img_bus_url;
-    private String logo_url;
+    private String busImageUrl;
+    private String logoImageUrl;
     private String description;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "itinerary_id")
@@ -40,12 +44,21 @@ public class TransportCompany {
 
     protected TransportCompany(){
         this.name= Strings.EMPTY;
-        this.img_bus_url= Strings.EMPTY;
-        this.logo_url= Strings.EMPTY;
+        this.busImageUrl= Strings.EMPTY;
+        this.logoImageUrl= Strings.EMPTY;
         this.description= Strings.EMPTY;
         this.itinerary= new Itinerary();
         this.unitBuses= new ArrayList<>();
         this.drivers=new ArrayList<>();
+    }
+
+    public TransportCompany (CreateTransportCompanyCommand command){
+        this.name=command.name();
+        this.busImageUrl= command.busImageUrl();
+        this.logoImageUrl= command.logoImageUrl();
+        this.description= command.description();
+        //this.user= command.userId(); // Que podemos hacer aquí? ....
+
     }
 
     public void registerNewDriver (RegisterDriverCommand command){
