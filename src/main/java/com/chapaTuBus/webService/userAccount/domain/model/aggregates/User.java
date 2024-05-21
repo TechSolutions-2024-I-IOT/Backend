@@ -7,13 +7,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 
 import java.util.Date;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
 @Data
 @Table(name = "users")
@@ -44,17 +44,6 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
 
-
-    public User(String email, String password, Role role) {
-        this.email=email;
-        this.password=password;
-        this.role=role;
-    }
-
-    public static User signUp(RegisterUserCommand command){
-        return new User(command.email(),command.password(),command.role());
-    }
-
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();
@@ -65,4 +54,25 @@ public class User {
     protected void onUpdate() {
         updatedAt = new Date();
     }
+
+    protected User() {
+        this.email= Strings.EMPTY;
+        this.password= Strings.EMPTY;
+        this.role=null;
+    }
+
+    public User(String email, String password, Role role) {
+        this.email=email;
+        this.password=password;
+        this.role=role;
+    }
+
+    public User (RegisterUserCommand command){
+        //return new User(command.email(),command.password(),command.role());
+        this.email=command.email();
+        this.password=command.password();
+        this.role=command.role();
+    }
+
+
 }

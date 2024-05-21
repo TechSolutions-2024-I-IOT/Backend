@@ -1,36 +1,48 @@
 package com.chapaTuBus.webService.userAccount.interfaces.rest;
 
-import com.chapaTuBus.webService.userAccount.application.internal.commandhandlers.RegisterUserCommandHandler;
+import com.chapaTuBus.webService.userAccount.application.internal.commandservices.AuthenticationCommandServiceImpl;
+import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
 import com.chapaTuBus.webService.userAccount.domain.model.commands.auth.RegisterUserCommand;
 import com.chapaTuBus.webService.userAccount.interfaces.rest.resources.RegisterUserResource;
+import com.chapaTuBus.webService.userAccount.interfaces.rest.resources.UserRegisteredResource;
 import com.chapaTuBus.webService.userAccount.interfaces.rest.transform.RegisterUserCommandFromResourceAssembler;
+import com.chapaTuBus.webService.userAccount.interfaces.rest.transform.UserRegisteredResourceFromEntityAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequestMapping(value = "/api/v1/auth/")
 public class AuthenticationController {
 
-    private final RegisterUserCommandHandler registerUserCommandHandler;
+    private final AuthenticationCommandServiceImpl authenticationCommandService;
     private final RegisterUserCommandFromResourceAssembler assembler; // Inyecta el assembler
 
-    public AuthenticationController(RegisterUserCommandHandler registerUserCommandHandler,
-                                    RegisterUserCommandFromResourceAssembler assembler) {
-        this.registerUserCommandHandler = registerUserCommandHandler;
+    public AuthenticationController(
+            AuthenticationCommandServiceImpl authenticationCommandService,
+            RegisterUserCommandFromResourceAssembler assembler
+    ) {
+        this.authenticationCommandService = authenticationCommandService;
         this.assembler = assembler;
     }
 
 
-
     @PostMapping("signUp")
-    public ResponseEntity<?> signUp(@RequestBody RegisterUserResource registerUserResource) {
-        // Llama al método desde la instancia inyectada
-        RegisterUserCommand command = assembler.toCommandFromResource(registerUserResource);
-        registerUserCommandHandler.handle(command);
-        return ResponseEntity.ok("User registered successfully");
+    public ResponseEntity<UserRegisteredResource> signUp(@RequestBody RegisterUserResource registerUserResource) {
+
+        Optional<User> user = authenticationCommandService
+                .handle(assembler.toCommandFromResource(registerUserResource));
+
+        return user.map(user1 ->
+                new ResponseEntity<>(UserRegisteredResourceFromEntityAssembler.toResourceFromEntity(user1),CREATED))
+                .orElseGet(()->ResponseEntity.badRequest().build());
+
     }
 
 }
