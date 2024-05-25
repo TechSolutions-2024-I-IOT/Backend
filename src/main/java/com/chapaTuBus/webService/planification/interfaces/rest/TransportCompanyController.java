@@ -36,7 +36,7 @@ public class TransportCompanyController {
         this.transportCompanyQueryService = transportCompanyQueryService;
     }
 
-    @GetMapping("transport-company/{id}/drivers")
+    @GetMapping("{id}/drivers")
     ResponseEntity<List<DriverRegisteredResource>> getDrivers(@PathVariable Long id){
 
         var getAllDriversByTransportCompanyIdQuery= new GetAllDriversByTransportCompanyIdQuery(id);
