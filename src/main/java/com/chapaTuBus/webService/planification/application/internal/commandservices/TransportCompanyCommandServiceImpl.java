@@ -6,6 +6,8 @@ import com.chapaTuBus.webService.planification.domain.model.commands.transportCo
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
+import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
+import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,18 +16,27 @@ import java.util.Optional;
 public class TransportCompanyCommandServiceImpl implements TransportCompanyCommandService {
 
     private final TransportCompanyRepository transportCompanyRepository;
+    private final UserRepository userRepository;
 
-    public TransportCompanyCommandServiceImpl(TransportCompanyRepository transportCompanyRepository) {
+    public TransportCompanyCommandServiceImpl(
+            TransportCompanyRepository transportCompanyRepository,
+            UserRepository userRepository) {
         this.transportCompanyRepository = transportCompanyRepository;
+        this.userRepository=userRepository;
     }
 
     @Override
     public Optional<TransportCompany> handle(CreateTransportCompanyCommand command) {
 
-        //Optional<TransportCompany> transportCompany
-        //Cuando se crea debe saber a cual user referenciarse , como hago eso?
 
-        return Optional.empty();
+        Optional<User> user= userRepository.findById(command.userId());
+
+        if(user.isEmpty())return Optional.empty();
+
+        TransportCompany transportCompany= new TransportCompany(user.get(),command);
+        transportCompanyRepository.save(transportCompany);
+
+        return Optional.of(transportCompany);
     }
 
     @Override

@@ -12,6 +12,7 @@ import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Entity
@@ -52,13 +53,12 @@ public class TransportCompany {
         this.drivers=new ArrayList<>();
     }
 
-    public TransportCompany (CreateTransportCompanyCommand command){
+    public TransportCompany (User user,CreateTransportCompanyCommand command){
         this.name=command.name();
         this.busImageUrl= command.busImageUrl();
         this.logoImageUrl= command.logoImageUrl();
         this.description= command.description();
-        //this.user= command.userId(); // Que podemos hacer aquí? ....
-
+        this.user= user;
     }
 
     public void registerNewDriver (RegisterDriverCommand command){
