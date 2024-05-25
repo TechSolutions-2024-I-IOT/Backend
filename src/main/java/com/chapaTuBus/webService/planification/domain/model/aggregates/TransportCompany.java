@@ -8,6 +8,8 @@ import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
 import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.util.Strings;
 
 import java.util.ArrayList;
@@ -16,7 +18,8 @@ import java.util.Optional;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "transport_companies")
 public class TransportCompany {
 
@@ -40,7 +43,7 @@ public class TransportCompany {
     @OneToMany(mappedBy = "transportCompany", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UnitBus> unitBuses;
 
-    @OneToMany(mappedBy = "transportCompany")
+    @OneToMany(mappedBy = "transportCompany",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Driver>drivers;
 
     protected TransportCompany(){
@@ -64,6 +67,8 @@ public class TransportCompany {
     public void registerNewDriver (RegisterDriverCommand command){
         Driver driver= Driver.builder()
                 .dni(command.dni())
+                .phoneNumber(command.phoneNumber())
+                .photoUrl(command.photoUrl())
                 .driverLicenseNumber(command.driverLicenseNumber())
                 .email(command.email())
                 .firstName(command.firstName())
