@@ -1,8 +1,11 @@
 package com.chapaTuBus.webService.planification.application.internal.queryservices;
 
+import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
+import com.chapaTuBus.webService.planification.domain.model.queries.GetAllBusesByTransportCompanyIdQuery;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByTransportCompanyIdQuery;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
+import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.BusRepository;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.DriverRepository;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
 import org.springframework.stereotype.Service;
@@ -16,16 +19,25 @@ public class TransportCompanyQueryServiceImpl implements TransportCompanyQuerySe
 
     private final TransportCompanyRepository transportCompanyRepository;
     private final DriverRepository driverRepository;
+    private final BusRepository busRepository;
 
     public TransportCompanyQueryServiceImpl(
             TransportCompanyRepository transportCompanyRepository,
-            DriverRepository driverRepository) {
+            DriverRepository driverRepository,
+            BusRepository busRepository
+            ) {
         this.transportCompanyRepository = transportCompanyRepository;
         this.driverRepository=driverRepository;
+        this.busRepository=busRepository;
     }
 
     @Override
     public List<Driver> handle(GetAllDriversByTransportCompanyIdQuery query) {
         return driverRepository.findAllByTransportCompanyId(query.id());
+    }
+
+    @Override
+    public List<Bus> handle(GetAllBusesByTransportCompanyIdQuery query) {
+        return busRepository.findAllByTransportCompanyId(query.id());
     }
 }

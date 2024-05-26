@@ -3,6 +3,7 @@ package com.chapaTuBus.webService.planification.interfaces.rest;
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
+import com.chapaTuBus.webService.planification.domain.model.queries.GetAllBusesByTransportCompanyIdQuery;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByTransportCompanyIdQuery;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
@@ -56,6 +57,23 @@ public class TransportCompanyController {
 
         return ResponseEntity.ok(driversRegisteredResources);
 
+    }
+
+    @GetMapping("{id}/buses")
+    ResponseEntity<List<BusRegisteredResoruce>>getBuses(@PathVariable Long id){
+
+        var getAllBusesByTransportCompanyIdQuery= new GetAllBusesByTransportCompanyIdQuery(id);
+
+        var buses= transportCompanyQueryService.handle(getAllBusesByTransportCompanyIdQuery);
+
+        if(buses.isEmpty())return ResponseEntity.notFound().build();
+
+        var busesRegisteredResources=
+                buses.stream().map(
+                        BusRegisteredResourceFromEntityAssembler::toResourceFromEntity
+                ).toList();
+
+        return ResponseEntity.ok(busesRegisteredResources);
     }
 
     @PostMapping("new-transport-company")
