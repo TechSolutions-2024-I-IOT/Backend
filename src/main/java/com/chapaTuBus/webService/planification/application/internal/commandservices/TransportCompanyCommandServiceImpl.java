@@ -1,8 +1,10 @@
 package com.chapaTuBus.webService.planification.application.internal.commandservices;
 
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
+import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
+import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
@@ -37,6 +39,24 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
         transportCompanyRepository.save(transportCompany);
 
         return Optional.of(transportCompany);
+    }
+
+    @Override
+    public Optional<Bus> handle(RegisterBusCommand command) {
+
+        Optional<TransportCompany> transportCompanyOpt=transportCompanyRepository.findById(command.transportCompanyId());
+
+        if(transportCompanyOpt.isPresent()){
+            TransportCompany transportCompany= transportCompanyOpt.get();
+            transportCompany.registerNewBus(command);
+            transportCompanyRepository.save(transportCompany);
+            return transportCompany.getBuses().stream()
+                    .filter(bus->bus.getLicensePlate().equals(command.licensePlate())).findFirst();
+        }else{
+            return Optional.empty();
+        }
+
+
     }
 
     @Override

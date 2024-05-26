@@ -1,11 +1,16 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
+import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import com.chapaTuBus.webService.planification.domain.model.valueobjects.BusStates;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Data
 public class Bus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,5 +25,9 @@ public class Bus {
     private int year;
 
     private BusStates state;
+
+    @ManyToOne
+    @JoinColumn(name = "transport_company_id")
+    private TransportCompany transportCompany;
 
 }

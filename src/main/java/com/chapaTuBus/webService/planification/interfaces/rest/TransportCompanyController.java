@@ -1,16 +1,21 @@
 package com.chapaTuBus.webService.planification.interfaces.rest;
 
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
+import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByTransportCompanyIdQuery;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.DriverRepository;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.BusRegisteredResoruce;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.RegisterBusResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.DriverRegisteredResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.RegisterDriverResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CreateTransportCompanyResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.TransportCompanyCreatedResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.BusRegisteredResourceFromEntityAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.RegisterBusCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.DriverResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.RegisterDriverCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CreateTransportCompanyCommandFromResourceAssembler;
@@ -53,7 +58,7 @@ public class TransportCompanyController {
 
     }
 
-    @PostMapping("transport-company")
+    @PostMapping("new-transport-company")
     ResponseEntity<TransportCompanyCreatedResource> createTransportCompany(@RequestParam(name = "userId") Long userId, @RequestBody CreateTransportCompanyResource createTransportCompanyResource){
 
         Optional<TransportCompany> transportCompany= transportCompanyCommandService
@@ -67,8 +72,8 @@ public class TransportCompanyController {
 
     }
 
-    @PostMapping("drivers")
-    ResponseEntity<DriverRegisteredResource> registerDriver(@RequestParam (name = "transportCompanyId") Long transportCompanyId, @RequestBody RegisterDriverResource registerDriverResource){
+    @PostMapping("{transportCompanyId}/register-driver")
+    ResponseEntity<DriverRegisteredResource> registerDriver(@PathVariable Long transportCompanyId, @RequestBody RegisterDriverResource registerDriverResource){
 
 
         Optional<Driver> driver= transportCompanyCommandService.
@@ -80,4 +85,18 @@ public class TransportCompanyController {
                 new ResponseEntity<>(DriverResourceFromEntityAssembler.toResourceFromEntity(actualDriver),CREATED))
                 .orElseGet(()->ResponseEntity.badRequest().build());
     }
+
+    @PostMapping("{transportCompanyId}/register-bus")
+    ResponseEntity<BusRegisteredResoruce>registerBus(@PathVariable Long transportCompanyId, @RequestBody RegisterBusResource registerBusResource){
+
+        Optional<Bus> bus= transportCompanyCommandService.
+                handle(RegisterBusCommandFromResourceAssembler.toCommand(transportCompanyId,registerBusResource));
+
+        return bus.map(actualBus->
+                new ResponseEntity<>(BusRegisteredResourceFromEntityAssembler.toResourceFromEntity(actualBus),CREATED))
+                .orElseGet(()->ResponseEntity.badRequest().build());
+
+    }
+
+
 }

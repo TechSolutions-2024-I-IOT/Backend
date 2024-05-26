@@ -1,5 +1,6 @@
 package com.chapaTuBus.webService.planification.domain.model.aggregates;
 
+import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
@@ -83,6 +84,19 @@ public class TransportCompany {
 
         this.drivers.add(driver);
 
+    }
+
+    public void registerNewBus(RegisterBusCommand command){
+        Bus bus = Bus.builder()
+                .state(command.state())
+                .year(command.year())
+                .seatingCapacity(command.seatingCapacity())
+                .licensePlate(command.licensePlate())
+                .totalCapacity(command.totalCapacity())
+                .transportCompany(this)
+                .build();
+
+        this.buses.add(bus);
     }
 
 

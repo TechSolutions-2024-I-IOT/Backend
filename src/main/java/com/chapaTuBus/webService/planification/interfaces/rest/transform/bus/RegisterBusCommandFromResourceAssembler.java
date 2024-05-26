@@ -19,6 +19,7 @@ public class RegisterBusCommandFromResourceAssembler {
 
         return new RegisterBusCommand(
                 transportCompanyId,
+                registerBusResource.licensePlate(),
                 registerBusResource.seatingCapacity(),
                 registerBusResource.totalCapacity(),
                 registerBusResource.year(),
