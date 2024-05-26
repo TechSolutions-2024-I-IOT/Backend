@@ -2,6 +2,7 @@ package com.chapaTuBus.webService.planification.domain.model.aggregates;
 
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
+import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.model.entities.Itinerary;
 import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
@@ -46,6 +47,9 @@ public class TransportCompany {
     @OneToMany(mappedBy = "transportCompany",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Driver>drivers;
 
+    @OneToMany(mappedBy = "transportCompany",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Bus> buses;
+
     protected TransportCompany(){
         this.name= Strings.EMPTY;
         this.busImageUrl= Strings.EMPTY;
@@ -54,6 +58,7 @@ public class TransportCompany {
         this.itinerary= new Itinerary();
         this.unitBuses= new ArrayList<>();
         this.drivers=new ArrayList<>();
+        this.buses= new ArrayList<>();
     }
 
     public TransportCompany (User user,CreateTransportCompanyCommand command){
@@ -79,6 +84,7 @@ public class TransportCompany {
         this.drivers.add(driver);
 
     }
+
 
 
 }
