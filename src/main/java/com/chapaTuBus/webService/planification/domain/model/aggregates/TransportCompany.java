@@ -3,6 +3,7 @@ package com.chapaTuBus.webService.planification.domain.model.aggregates;
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.AssignUnitBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.model.entities.Itinerary;
@@ -99,6 +100,15 @@ public class TransportCompany {
         this.buses.add(bus);
     }
 
+    public void assignNewUnitBus(AssignUnitBusCommand command){
+        UnitBus unitBus= UnitBus.builder()
+                .bus(command.bus())
+                .driver(command.driver())
+                .transportCompany(this)
+                .build();
+
+        this.unitBuses.add(unitBus);
+    }
 
 
 }

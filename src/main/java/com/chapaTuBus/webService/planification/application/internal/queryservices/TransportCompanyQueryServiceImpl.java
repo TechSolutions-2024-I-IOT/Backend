@@ -17,7 +17,7 @@ import java.util.List;
 public class TransportCompanyQueryServiceImpl implements TransportCompanyQueryService {
 
 
-    private final TransportCompanyRepository transportCompanyRepository;
+    //private final TransportCompanyRepository transportCompanyRepository;
     private final DriverRepository driverRepository;
     private final BusRepository busRepository;
 
@@ -26,7 +26,7 @@ public class TransportCompanyQueryServiceImpl implements TransportCompanyQuerySe
             DriverRepository driverRepository,
             BusRepository busRepository
             ) {
-        this.transportCompanyRepository = transportCompanyRepository;
+        //this.transportCompanyRepository = transportCompanyRepository;
         this.driverRepository=driverRepository;
         this.busRepository=busRepository;
     }
