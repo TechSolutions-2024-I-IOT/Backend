@@ -35,6 +35,7 @@ import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/api/v1/transport-company/")
 public class TransportCompanyController {

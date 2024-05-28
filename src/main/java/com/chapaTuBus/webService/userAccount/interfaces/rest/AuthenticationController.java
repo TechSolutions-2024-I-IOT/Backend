@@ -8,15 +8,13 @@ import com.chapaTuBus.webService.userAccount.interfaces.rest.resources.UserRegis
 import com.chapaTuBus.webService.userAccount.interfaces.rest.transform.RegisterUserCommandFromResourceAssembler;
 import com.chapaTuBus.webService.userAccount.interfaces.rest.transform.UserRegisteredResourceFromEntityAssembler;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/api/v1/auth/")
 public class AuthenticationController {
