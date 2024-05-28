@@ -6,6 +6,7 @@ import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllBusesByTransportCompanyIdQuery;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByTransportCompanyIdQuery;
+import com.chapaTuBus.webService.planification.domain.model.queries.GetAllUnitBusesByTransportCompanyIdQuery;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.DriverRepository;
@@ -133,6 +134,21 @@ public class TransportCompanyController {
 
     }
 
+    @GetMapping("{transportCompanyId}/unit-buses")
+    ResponseEntity<List<UnitBusCreatedResource>>getUnitBuses(@PathVariable Long transportCompanyId){
 
+        var getAllUnitBusesByTransportCompanyIdQuery= new GetAllUnitBusesByTransportCompanyIdQuery(transportCompanyId);
+
+        var unitBuses= transportCompanyQueryService.handle(getAllUnitBusesByTransportCompanyIdQuery);
+
+        if(unitBuses.isEmpty())return ResponseEntity.notFound().build();
+
+        var unitBusesRegisteredResource=
+                unitBuses.stream().map(
+                        UnitBusCreatedResourceFromEntityAssembler ::toResourceFromEntity
+                ).toList();
+
+        return ResponseEntity.ok(unitBusesRegisteredResource);
+    }
 
 }
