@@ -4,12 +4,12 @@ import com.chapaTuBus.webService.planification.domain.model.aggregates.Transport
 import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllBusesByTransportCompanyIdQuery;
+import com.chapaTuBus.webService.planification.domain.model.queries.GetAllBusesByUserIdQuery;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByUserIdQuery;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllUnitBusesByTransportCompanyIdQuery;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.BusRegisteredResoruce;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.BusRegisteredResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.RegisterBusResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.DriverRegisteredResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.RegisterDriverResource;
@@ -65,10 +65,10 @@ public class TransportCompanyController {
 
     }
 
-    @GetMapping("{transportCompanyId}/buses")
-    ResponseEntity<List<BusRegisteredResoruce>>getBuses(@PathVariable Long transportCompanyId){
+    @GetMapping("/buses")
+    ResponseEntity<List<BusRegisteredResource>>getBuses(@RequestParam(name = "userId") int userId){
 
-        var getAllBusesByTransportCompanyIdQuery= new GetAllBusesByTransportCompanyIdQuery(transportCompanyId);
+        var getAllBusesByTransportCompanyIdQuery= new GetAllBusesByUserIdQuery(userId);
 
         var buses= transportCompanyQueryService.handle(getAllBusesByTransportCompanyIdQuery);
 
@@ -109,11 +109,11 @@ public class TransportCompanyController {
                 .orElseGet(()->ResponseEntity.badRequest().build());
     }
 
-    @PostMapping("{transportCompanyId}/register-bus")
-    ResponseEntity<BusRegisteredResoruce>registerBus(@PathVariable Long transportCompanyId, @RequestBody RegisterBusResource registerBusResource){
+    @PostMapping("register-bus")
+    ResponseEntity<BusRegisteredResource>registerBus(@RequestBody RegisterBusResource registerBusResource){
 
         Optional<Bus> bus= transportCompanyCommandService.
-                handle(RegisterBusCommandFromResourceAssembler.toCommand(transportCompanyId,registerBusResource));
+                handle(RegisterBusCommandFromResourceAssembler.toCommand(registerBusResource));
 
         return bus.map(actualBus->
                 new ResponseEntity<>(BusRegisteredResourceFromEntityAssembler.toResourceFromEntity(actualBus),CREATED))

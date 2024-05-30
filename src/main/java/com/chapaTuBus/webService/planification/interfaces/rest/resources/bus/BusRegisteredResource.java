@@ -2,12 +2,13 @@ package com.chapaTuBus.webService.planification.interfaces.rest.resources.bus;
 
 import com.chapaTuBus.webService.planification.domain.model.valueobjects.BusStates;
 
-public record BusRegisteredResoruce(
+public record BusRegisteredResource(
         Long id,
         String licensePlate,
         int seatingCapacity,
         int totalCapacity,
         int year,
-        BusStates state
+        BusStates state,
+        int user
 ) {
 }

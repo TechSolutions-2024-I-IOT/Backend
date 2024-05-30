@@ -5,12 +5,12 @@ import com.chapaTuBus.webService.planification.domain.model.valueobjects.BusStat
 import java.time.Year;
 
 public record RegisterBusCommand(
-        Long transportCompanyId,
         String licensePlate,
         int seatingCapacity,
         int totalCapacity,
         int year,
-        BusStates state
+        BusStates state,
+        int user
 ) {
 
     public RegisterBusCommand{

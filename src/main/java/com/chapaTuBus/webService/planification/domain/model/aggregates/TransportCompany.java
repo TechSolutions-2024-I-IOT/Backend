@@ -96,6 +96,7 @@ public class TransportCompany {
                 .licensePlate(command.licensePlate())
                 .totalCapacity(command.totalCapacity())
                 .transportCompany(this)
+                .user(command.user())
                 .build();
 
         this.buses.add(bus);

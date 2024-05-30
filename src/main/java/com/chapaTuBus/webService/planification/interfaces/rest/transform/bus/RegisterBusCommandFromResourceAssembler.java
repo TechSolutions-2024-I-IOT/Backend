@@ -5,7 +5,7 @@ import com.chapaTuBus.webService.planification.domain.model.valueobjects.BusStat
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.RegisterBusResource;
 
 public class RegisterBusCommandFromResourceAssembler {
-    public static RegisterBusCommand toCommand(Long transportCompanyId, RegisterBusResource registerBusResource){
+    public static RegisterBusCommand toCommand(RegisterBusResource registerBusResource){
 
         //Modify String State to enum state
 
@@ -18,12 +18,12 @@ public class RegisterBusCommandFromResourceAssembler {
         }
 
         return new RegisterBusCommand(
-                transportCompanyId,
                 registerBusResource.licensePlate(),
                 registerBusResource.seatingCapacity(),
                 registerBusResource.totalCapacity(),
                 registerBusResource.year(),
-                busState
+                busState,
+                registerBusResource.userId()
         );
     }
 }

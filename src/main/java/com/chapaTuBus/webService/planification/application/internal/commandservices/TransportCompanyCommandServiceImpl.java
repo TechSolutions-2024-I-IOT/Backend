@@ -52,7 +52,12 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
     @Override
     public Optional<Bus> handle(RegisterBusCommand command) {
 
-        Optional<TransportCompany> transportCompanyOpt=transportCompanyRepository.findById(command.transportCompanyId());
+
+        Optional<User> userOpt= userRepository.findById((long) command.user());
+
+        if(userOpt.isEmpty())return Optional.empty();
+
+        Optional<TransportCompany> transportCompanyOpt=transportCompanyRepository.findById(userOpt.get().getTransportCompany().getId());
 
         if(transportCompanyOpt.isPresent()){
             TransportCompany transportCompany= transportCompanyOpt.get();
@@ -66,6 +71,7 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
 
 
     }
+
 
     @Override
     public Optional<UnitBus> handle(AssignUnitBusCommand command) {
@@ -103,7 +109,7 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
         if(userOpt.isEmpty()){
             return Optional.empty();
         }
-        
+
         Optional<TransportCompany> transportCompanyOpt= transportCompanyRepository.findById(userOpt.get().getTransportCompany().getId());
 
         if(transportCompanyOpt.isPresent()){
