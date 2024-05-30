@@ -57,6 +57,13 @@
 			<version>2.1.0</version>
 		</dependency>
 
+		<!--AWS S3 BUCKET -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>1.12.730</version>
+		</dependency>
+
 
 
 	</dependencies>
