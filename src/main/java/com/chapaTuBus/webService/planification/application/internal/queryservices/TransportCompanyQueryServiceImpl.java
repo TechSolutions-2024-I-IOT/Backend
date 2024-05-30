@@ -4,7 +4,7 @@ import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllBusesByTransportCompanyIdQuery;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByTransportCompanyIdQuery;
+import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByUserIdQuery;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllUnitBusesByTransportCompanyIdQuery;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.BusRepository;
@@ -38,8 +38,8 @@ public class TransportCompanyQueryServiceImpl implements TransportCompanyQuerySe
     }
 
     @Override
-    public List<Driver> handle(GetAllDriversByTransportCompanyIdQuery query) {
-        return driverRepository.findAllByTransportCompanyId(query.id());
+    public List<Driver> handle(GetAllDriversByUserIdQuery query) {
+        return driverRepository.findAllByUser(query.id());
     }
 
     @Override

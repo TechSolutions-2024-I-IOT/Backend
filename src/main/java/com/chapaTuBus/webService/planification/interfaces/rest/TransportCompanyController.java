@@ -5,12 +5,10 @@ import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllBusesByTransportCompanyIdQuery;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByTransportCompanyIdQuery;
+import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByUserIdQuery;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllUnitBusesByTransportCompanyIdQuery;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
-import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.DriverRepository;
-import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.BusRegisteredResoruce;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.RegisterBusResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.DriverRegisteredResource;
@@ -49,12 +47,13 @@ public class TransportCompanyController {
         this.transportCompanyQueryService = transportCompanyQueryService;
     }
 
-    @GetMapping("{transportCompanyId}/drivers")
-    ResponseEntity<List<DriverRegisteredResource>> getDrivers(@PathVariable Long transportCompanyId){
+    @GetMapping("/drivers")
+    ResponseEntity<List<DriverRegisteredResource>> getDrivers(@RequestParam(name = "userId") int userId){
 
-        var getAllDriversByTransportCompanyIdQuery= new GetAllDriversByTransportCompanyIdQuery(transportCompanyId);
+        var getAllDriversByUserIdQuery= new GetAllDriversByUserIdQuery(userId);
 
-        var drivers= transportCompanyQueryService.handle(getAllDriversByTransportCompanyIdQuery);
+        var drivers= transportCompanyQueryService.handle(getAllDriversByUserIdQuery);
+
         if(drivers.isEmpty()) return ResponseEntity.notFound().build();
 
         var driversRegisteredResources=
@@ -97,13 +96,12 @@ public class TransportCompanyController {
 
     }
 
-    @PostMapping("{transportCompanyId}/register-driver")
-    ResponseEntity<DriverRegisteredResource> registerDriver(@PathVariable Long transportCompanyId, @RequestBody RegisterDriverResource registerDriverResource){
-
+    @PostMapping("/register-driver")
+    ResponseEntity<DriverRegisteredResource> registerDriver(@RequestBody RegisterDriverResource registerDriverResource){
 
         Optional<Driver> driver= transportCompanyCommandService.
                 //Execute the command
-                handle(RegisterDriverCommandFromResourceAssembler.toCommand(transportCompanyId,registerDriverResource));
+                handle(RegisterDriverCommandFromResourceAssembler.toCommand(registerDriverResource));
 
         //Return
         return driver.map(actualDriver->

@@ -98,7 +98,13 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
     @Override
     public Optional<Driver> handle(RegisterDriverCommand command) {
 
-        Optional<TransportCompany> transportCompanyOpt= transportCompanyRepository.findById(command.transportCompanyId());
+        Optional<User> userOpt = userRepository.findById((long) command.user());
+
+        if(userOpt.isEmpty()){
+            return Optional.empty();
+        }
+        
+        Optional<TransportCompany> transportCompanyOpt= transportCompanyRepository.findById(userOpt.get().getTransportCompany().getId());
 
         if(transportCompanyOpt.isPresent()){
             TransportCompany transportCompany= transportCompanyOpt.get();

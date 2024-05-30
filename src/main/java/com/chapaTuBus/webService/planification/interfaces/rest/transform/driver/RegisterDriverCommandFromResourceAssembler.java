@@ -4,8 +4,16 @@ import com.chapaTuBus.webService.planification.domain.model.commands.driver.Regi
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.RegisterDriverResource;
 
 public class RegisterDriverCommandFromResourceAssembler {
-    public static RegisterDriverCommand toCommand(Long transportCompanyId,RegisterDriverResource registerDriverResource) {
-        return new RegisterDriverCommand(transportCompanyId,registerDriverResource.firstName(), registerDriverResource.lastName(), registerDriverResource.driverLicenseNumber(),
-                registerDriverResource.dni(), registerDriverResource.photoUrl(), registerDriverResource.phoneNumber(), registerDriverResource.email());
+    public static RegisterDriverCommand toCommand(RegisterDriverResource registerDriverResource) {
+        return new RegisterDriverCommand(
+                registerDriverResource.firstName(),
+                registerDriverResource.lastName(),
+                registerDriverResource.driverLicenseNumber(),
+                registerDriverResource.dni(),
+                registerDriverResource.photoUrl(),
+                registerDriverResource.phoneNumber(),
+                registerDriverResource.email(),
+                registerDriverResource.user()
+        );
     }
 }

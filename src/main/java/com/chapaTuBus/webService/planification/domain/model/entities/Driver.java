@@ -30,6 +30,8 @@ public class Driver {
 
     private String email;
 
+    private int user;
+
     @ManyToOne
     @JoinColumn(name = "transport_company_id")
     private TransportCompany transportCompany;

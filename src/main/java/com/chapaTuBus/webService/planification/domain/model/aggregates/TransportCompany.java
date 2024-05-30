@@ -81,6 +81,7 @@ public class TransportCompany {
                 .firstName(command.firstName())
                 .lastName(command.lastName())
                 .transportCompany(this)
+                .user(command.user())
                 .build();
 
         this.drivers.add(driver);

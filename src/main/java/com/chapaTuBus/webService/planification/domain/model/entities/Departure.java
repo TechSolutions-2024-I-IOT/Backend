@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -17,8 +18,7 @@ public class Departure {
 
     private Date departureTime;
 
-    @ManyToOne
-    @JoinColumn(name = "departure_schedule_id")
-    private DepartureSchedule departureSchedule;
+    @OneToMany(mappedBy = "departure")
+    private List<DepartureSchedule> departureSchedules;
 
 }
