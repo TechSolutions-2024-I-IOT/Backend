@@ -49,8 +49,9 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL)
-    private List<TransportCompany>transportCompanies;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "transport_company_id",referencedColumnName = "id")
+    private TransportCompany transportCompany;
 
     @PrePersist
     protected void onCreate() {
@@ -67,7 +68,7 @@ public class User {
         this.email= Strings.EMPTY;
         this.password= Strings.EMPTY;
         this.role=null;
-        this.transportCompanies=new ArrayList<>();
+        this.transportCompany=new TransportCompany();
     }
 
     public User(String email, String password, Role role) {
@@ -80,7 +81,7 @@ public class User {
         this.email=command.email();
         this.password=command.password();
         this.role=command.role();
-        this.transportCompanies= new ArrayList<>();
+        this.transportCompany= new TransportCompany();
     }
 
 

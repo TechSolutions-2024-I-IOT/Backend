@@ -28,6 +28,7 @@ public class TransportCompany {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private Long id;
 
     private String name;
@@ -35,8 +36,7 @@ public class TransportCompany {
     private String logoImageUrl;
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "transportCompany")
     private User user;
 
     @ManyToOne
@@ -52,12 +52,12 @@ public class TransportCompany {
     @OneToMany(mappedBy = "transportCompany",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Bus> buses;
 
-    protected TransportCompany(){
+    public TransportCompany(){
         this.name= Strings.EMPTY;
         this.busImageUrl= Strings.EMPTY;
         this.logoImageUrl= Strings.EMPTY;
         this.description= Strings.EMPTY;
-        this.itinerary= new Itinerary();
+        this.itinerary= null;
         this.unitBuses= new ArrayList<>();
         this.drivers=new ArrayList<>();
         this.buses= new ArrayList<>();
