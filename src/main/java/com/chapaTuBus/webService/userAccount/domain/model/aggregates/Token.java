@@ -14,6 +14,7 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 @Entity
 public class Token {
+    @jakarta.persistence.Id
     @Id
     @GeneratedValue
     public Long id;
@@ -31,4 +32,12 @@ public class Token {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", referencedColumnName = "id")
     public User user;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }

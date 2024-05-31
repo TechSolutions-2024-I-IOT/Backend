@@ -5,7 +5,6 @@ import com.chapaTuBus.webService.userAccount.domain.model.commands.auth.Register
 import com.chapaTuBus.webService.userAccount.domain.model.commands.users.ModifyProfileCommand;
 import com.chapaTuBus.webService.userAccount.domain.services.AuthenticationCommandService;
 import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

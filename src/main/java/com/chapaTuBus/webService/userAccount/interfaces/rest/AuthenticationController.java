@@ -2,7 +2,6 @@ package com.chapaTuBus.webService.userAccount.interfaces.rest;
 
 import com.chapaTuBus.webService.userAccount.application.internal.commandservices.AuthenticationCommandServiceImpl;
 import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
-import com.chapaTuBus.webService.userAccount.domain.model.commands.auth.RegisterUserCommand;
 import com.chapaTuBus.webService.userAccount.interfaces.rest.resources.RegisterUserResource;
 import com.chapaTuBus.webService.userAccount.interfaces.rest.resources.UserRegisteredResource;
 import com.chapaTuBus.webService.userAccount.interfaces.rest.transform.RegisterUserCommandFromResourceAssembler;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
-
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
@@ -40,9 +38,9 @@ public class AuthenticationController {
                 .handle(assembler.toCommandFromResource(registerUserResource));
 
         return user.map(user1 ->
-                new ResponseEntity<>(UserRegisteredResourceFromEntityAssembler.toResourceFromEntity(user1),CREATED))
-                .orElseGet(()->ResponseEntity.badRequest().build());
+                        new ResponseEntity<>(UserRegisteredResourceFromEntityAssembler.toResourceFromEntity(user1), CREATED))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
 
     }
-
 }
+
