@@ -107,6 +107,7 @@ public class TransportCompany {
                 .bus(command.bus())
                 .driver(command.driver())
                 .transportCompany(this)
+                .user(command.userId())
                 .build();
 
         this.unitBuses.add(unitBus);

@@ -76,7 +76,11 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
     @Override
     public Optional<UnitBus> handle(AssignUnitBusCommand command) {
 
-        Optional<TransportCompany> transportCompanyOpt= transportCompanyRepository.findById(command.transportCompanyId());
+        Optional<User> userOpt = userRepository.findById((long) command.userId());
+
+        if(userOpt.isEmpty()) return Optional.empty();
+
+        Optional<TransportCompany> transportCompanyOpt= transportCompanyRepository.findById(userOpt.get().getTransportCompany().getId());
         Optional<Driver> driverOpt= driverRepository.findById(command.driver().getId());
         Optional<Bus> busOpt= busRepository.findById(command.bus().getId());
 
@@ -87,7 +91,7 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
             Driver driver= driverOpt.get();
             Bus bus= busOpt.get();
 
-            AssignUnitBusCommand updatedCommand= new AssignUnitBusCommand(command.transportCompanyId(),driver,bus);
+            AssignUnitBusCommand updatedCommand= new AssignUnitBusCommand(command.userId(), driver,bus);
 
             transportCompany.assignNewUnitBus(updatedCommand);
 

@@ -34,4 +34,6 @@ public class UnitBus {
     @JoinColumn(name = "transport_company_id")
     private TransportCompany transportCompany;
 
+    private int user;
+
 }

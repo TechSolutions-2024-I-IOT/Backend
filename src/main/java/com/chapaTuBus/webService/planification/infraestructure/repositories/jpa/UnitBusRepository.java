@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface UnitBusRepository extends JpaRepository<UnitBus,Long> {
-    List<UnitBus> findAllByTransportCompanyId(Long transportCompanyId);
+    List<UnitBus> findAllByUser(int userId);
 }

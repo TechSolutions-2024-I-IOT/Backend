@@ -1,9 +1,8 @@
 package com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus;
 
 public record AssignUnitBusResource(
-        Long transportCompanyId,
+        int userId,
         Long driverId,
         Long busId
-
 ) {
 }

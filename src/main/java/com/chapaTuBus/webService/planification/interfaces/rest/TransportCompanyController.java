@@ -6,7 +6,7 @@ import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllBusesByUserIdQuery;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByUserIdQuery;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllUnitBusesByTransportCompanyIdQuery;
+import com.chapaTuBus.webService.planification.domain.model.queries.GetAllUnitBusesByUserIdQuery;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.BusRegisteredResource;
@@ -68,9 +68,9 @@ public class TransportCompanyController {
     @GetMapping("/buses")
     ResponseEntity<List<BusRegisteredResource>>getBuses(@RequestParam(name = "userId") int userId){
 
-        var getAllBusesByTransportCompanyIdQuery= new GetAllBusesByUserIdQuery(userId);
+        var getAllBusesByUserIdQuery= new GetAllBusesByUserIdQuery(userId);
 
-        var buses= transportCompanyQueryService.handle(getAllBusesByTransportCompanyIdQuery);
+        var buses= transportCompanyQueryService.handle(getAllBusesByUserIdQuery);
 
         if(buses.isEmpty())return ResponseEntity.notFound().build();
 
@@ -80,6 +80,23 @@ public class TransportCompanyController {
                 ).toList();
 
         return ResponseEntity.ok(busesRegisteredResources);
+    }
+
+    @GetMapping("/unit-buses")
+    ResponseEntity<List<UnitBusCreatedResource>>getUnitBuses(@RequestParam(name = "userId") int userId){
+
+        var getAllUnitBusesByUserIdQuery= new GetAllUnitBusesByUserIdQuery(userId);
+
+        var unitBuses= transportCompanyQueryService.handle(getAllUnitBusesByUserIdQuery);
+
+        if(unitBuses.isEmpty())return ResponseEntity.notFound().build();
+
+        var unitBusesRegisteredResource=
+                unitBuses.stream().map(
+                        UnitBusCreatedResourceFromEntityAssembler ::toResourceFromEntity
+                ).toList();
+
+        return ResponseEntity.ok(unitBusesRegisteredResource);
     }
 
     @PostMapping("new-transport-company")
@@ -133,21 +150,6 @@ public class TransportCompanyController {
 
     }
 
-    @GetMapping("{transportCompanyId}/unit-buses")
-    ResponseEntity<List<UnitBusCreatedResource>>getUnitBuses(@PathVariable Long transportCompanyId){
 
-        var getAllUnitBusesByTransportCompanyIdQuery= new GetAllUnitBusesByTransportCompanyIdQuery(transportCompanyId);
-
-        var unitBuses= transportCompanyQueryService.handle(getAllUnitBusesByTransportCompanyIdQuery);
-
-        if(unitBuses.isEmpty())return ResponseEntity.notFound().build();
-
-        var unitBusesRegisteredResource=
-                unitBuses.stream().map(
-                        UnitBusCreatedResourceFromEntityAssembler ::toResourceFromEntity
-                ).toList();
-
-        return ResponseEntity.ok(unitBusesRegisteredResource);
-    }
 
 }

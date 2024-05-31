@@ -8,7 +8,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus
 public class AssignUnitBusCommandFromResourceAssembler {
     public static AssignUnitBusCommand toCommand(AssignUnitBusResource assignUnitBusResource){
         return new AssignUnitBusCommand(
-                assignUnitBusResource.transportCompanyId(),
+                assignUnitBusResource.userId(),
                 Driver.builder().id(assignUnitBusResource.driverId()).build(),
                 Bus.builder().id(assignUnitBusResource.busId()).build()
         );

@@ -6,6 +6,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus
 
 public record UnitBusCreatedResource (
         DriverDto driver,
-        BusDto bus
+        BusDto bus,
+        int user
 ){
 }
