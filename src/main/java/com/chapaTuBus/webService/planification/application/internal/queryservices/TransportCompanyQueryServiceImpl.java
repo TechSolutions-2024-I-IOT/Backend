@@ -1,55 +1,55 @@
 package com.chapaTuBus.webService.planification.application.internal.queryservices;
 
 import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
+import com.chapaTuBus.webService.planification.domain.model.entities.DepartureSchedule;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllBusesByUserIdQuery;
+import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDepartureSchedulesByUserIdAndScheduleIdQuery;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByUserIdQuery;
 import com.chapaTuBus.webService.planification.domain.model.queries.GetAllUnitBusesByUserIdQuery;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
-import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.BusRepository;
-import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.DriverRepository;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
-import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.UnitBusRepository;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 
 public class TransportCompanyQueryServiceImpl implements TransportCompanyQueryService {
 
 
-    //private final TransportCompanyRepository transportCompanyRepository;
-    private final DriverRepository driverRepository;
-    private final BusRepository busRepository;
+    private final TransportCompanyRepository transportCompanyRepository;
 
-    private final UnitBusRepository unitBusRepository;
 
     public TransportCompanyQueryServiceImpl(
-            TransportCompanyRepository transportCompanyRepository,
-            DriverRepository driverRepository,
-            BusRepository busRepository,
-            UnitBusRepository unitBusRepository) {
-        //this.transportCompanyRepository = transportCompanyRepository;
-        this.driverRepository=driverRepository;
-        this.busRepository=busRepository;
-        this.unitBusRepository = unitBusRepository;
+            TransportCompanyRepository transportCompanyRepository) {
+        this.transportCompanyRepository = transportCompanyRepository;
     }
 
     @Override
     public List<Driver> handle(GetAllDriversByUserIdQuery query) {
-        return driverRepository.findAllByUser(query.id());
+
+        return transportCompanyRepository.findDriversByUserId(query.id());
+
     }
 
     @Override
     public List<Bus> handle(GetAllBusesByUserIdQuery query) {
-        return busRepository.findAllByUser(query.id());
+
+        return transportCompanyRepository.findBusesByUserId(query.id());
     }
 
     @Override
     public List<UnitBus> handle(GetAllUnitBusesByUserIdQuery query) {
-        return unitBusRepository.findAllByUser(query.id());
+       // return unitBusRepository.findAllByUser(query.id());
+        return transportCompanyRepository.findUnitBusesByUserId(query.id());
     }
 
+    @Override
+    public List<DepartureSchedule> handle(GetAllDepartureSchedulesByUserIdAndScheduleIdQuery query){
+        return transportCompanyRepository.findAllDepartureSchedulesByUserIdAndScheduleId(query.userId(), query.scheduleId());
+    }
 }

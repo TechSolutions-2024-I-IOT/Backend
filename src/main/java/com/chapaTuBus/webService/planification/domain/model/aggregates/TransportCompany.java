@@ -1,13 +1,12 @@
 package com.chapaTuBus.webService.planification.domain.model.aggregates;
 
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.departureSchedule.CreateDepartureScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.AssignUnitBusCommand;
-import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
-import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
-import com.chapaTuBus.webService.planification.domain.model.entities.Itinerary;
-import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
+import com.chapaTuBus.webService.planification.domain.model.entities.*;
 import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -18,6 +17,7 @@ import org.apache.logging.log4j.util.Strings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -52,6 +52,9 @@ public class TransportCompany {
     @OneToMany(mappedBy = "transportCompany",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Bus> buses;
 
+    @OneToMany(mappedBy = "transportCompany",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Schedule> schedules;
+
     public TransportCompany(){
         this.name= Strings.EMPTY;
         this.busImageUrl= Strings.EMPTY;
@@ -61,6 +64,7 @@ public class TransportCompany {
         this.unitBuses= new ArrayList<>();
         this.drivers=new ArrayList<>();
         this.buses= new ArrayList<>();
+        this.schedules=new ArrayList<>();
     }
 
     public TransportCompany (User user,CreateTransportCompanyCommand command){
@@ -113,5 +117,60 @@ public class TransportCompany {
         this.unitBuses.add(unitBus);
     }
 
+
+    public void createNewSchedule(CreateScheduleCommand command) {
+        Schedule schedule= Schedule.builder()
+                .date(command.date())
+                .description(command.description())
+                .transportCompany(this)
+                .user(command.user())
+                .departureSchedules(null)
+                .build();
+
+        this.schedules.add(schedule);
+    }
+
+    public DepartureSchedule createNewDepartureSchedule(CreateDepartureScheduleCommand command){
+
+        Optional<Schedule> optionalSchedule = this.schedules.stream()
+                .filter(s -> s.getId().equals((long)command.scheduleId()))
+                .findFirst();
+
+        if (optionalSchedule.isPresent()) {
+            Schedule schedule = optionalSchedule.get();
+
+            Optional<UnitBus> optionalUnitBus = this.unitBuses.stream()
+                    .filter(ub -> ub.getId().equals((long)command.unitBusId()))
+                    .findFirst();
+
+            if (optionalUnitBus.isPresent()) {
+                UnitBus unitBus = optionalUnitBus.get();
+
+                DepartureSchedule departureSchedule = DepartureSchedule.builder()
+                        .departureTime(command.time())
+                        .roundNumber(command.roundNumber())
+                        .schedule(schedule)
+                        .unitBus(unitBus)
+                        .user(command.user())
+                        .build();
+
+                schedule.getDepartureSchedules().add(departureSchedule);
+
+                // Actualizar la lista schedules de TransportCompany
+                this.schedules = this.schedules.stream()
+                        .map(s -> s.getId().equals(schedule.getId()) ? schedule : s)
+                        .collect(Collectors.toList());
+
+                departureSchedule.setSchedule(schedule);
+
+                return departureSchedule;
+
+            } else {
+                throw new IllegalArgumentException("UnitBus not found with ID: " + command.unitBusId());
+            }
+        } else {
+            throw new IllegalArgumentException("Schedule not found with ID: " + command.scheduleId());
+        }
+    }
 
 }
