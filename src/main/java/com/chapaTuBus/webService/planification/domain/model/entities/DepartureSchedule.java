@@ -1,28 +1,34 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-import java.util.Date;
+import java.time.LocalTime;
 import java.util.List;
 
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Data
 public class DepartureSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date departureDate;
+    private LocalTime departureTime;
 
-    private Date shiftStart;
+    private int roundNumber;
 
     @ManyToOne
-    @JoinColumn(name = "departure_id",nullable = false)
-    private Departure departure;
+    @JoinColumn(name = "schedule_id",nullable = false)
+    private Schedule schedule;
 
     @ManyToOne
     @JoinColumn(name = "bus_unit_id")
     private UnitBus unitBus;
+
+    private int user;
 
 }
