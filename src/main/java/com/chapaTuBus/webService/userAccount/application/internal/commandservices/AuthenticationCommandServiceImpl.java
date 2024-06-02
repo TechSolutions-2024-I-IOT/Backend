@@ -121,8 +121,8 @@ public class AuthenticationCommandServiceImpl implements AuthenticationCommandSe
             Optional<User> optionalUser = this.userRepository.findByEmail(userEmail);
             if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
-                if (jwtService.isTokenValid(refreshToken, (UserDetails) user)) {
-                    String accessToken = jwtService.generateToken((UserDetails) user);
+                if (jwtService.isTokenValid(refreshToken, user)) {
+                    String accessToken = jwtService.generateToken(user);
                     revokeAllUserTokens(user);
                     saveUserToken(user, accessToken);
                     AuthenticationResponse authResponse = AuthenticationResponse.builder()
