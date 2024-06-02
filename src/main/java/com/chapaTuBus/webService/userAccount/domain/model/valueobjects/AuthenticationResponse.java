@@ -1,4 +1,4 @@
-package com.chapaTuBus.webService.userAccount.domain.model.aggregates;
+package com.chapaTuBus.webService.userAccount.domain.model.valueobjects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

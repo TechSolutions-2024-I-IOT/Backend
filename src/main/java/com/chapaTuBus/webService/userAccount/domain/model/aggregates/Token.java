@@ -2,11 +2,7 @@ package com.chapaTuBus.webService.userAccount.domain.model.aggregates;
 
 import com.chapaTuBus.webService.userAccount.domain.model.valueobjects.TokenTypes;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import lombok.*;
 
 @Data
 @Builder
@@ -14,7 +10,6 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 @Entity
 public class Token {
-    @jakarta.persistence.Id
     @Id
     @GeneratedValue
     public Long id;
@@ -33,11 +28,4 @@ public class Token {
     @JoinColumn(name="user_id", referencedColumnName = "id")
     public User user;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
 }
