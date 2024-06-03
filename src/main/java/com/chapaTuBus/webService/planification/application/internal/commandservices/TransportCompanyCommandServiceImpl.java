@@ -14,6 +14,7 @@ import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
 import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -33,12 +34,15 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
     public Optional<TransportCompany> handle(CreateTransportCompanyCommand command) {
 
 
-        Optional<User> user= userRepository.findById(command.userId());
+        Optional<User> userOpt= userRepository.findById(command.userId());
 
-        if(user.isEmpty())return Optional.empty();
+        if(userOpt.isEmpty())return Optional.empty();
 
-        TransportCompany transportCompany= new TransportCompany(user.get(),command);
+        User user = userOpt.get();
+        TransportCompany transportCompany= new TransportCompany(user,command);
         transportCompanyRepository.save(transportCompany);
+        user.setTransportCompany(transportCompany);
+        userRepository.save(user);
 
         return Optional.of(transportCompany);
     }
@@ -69,40 +73,31 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
 
     @Override
     public Optional<UnitBus> handle(AssignUnitBusCommand command) {
-
         Optional<User> userOpt = userRepository.findById((long) command.userId());
-
         if(userOpt.isEmpty()) return Optional.empty();
 
-        Optional<TransportCompany> transportCompanyOpt= transportCompanyRepository.findById(userOpt.get().getTransportCompany().getId());
+        TransportCompany transportCompany = userOpt.get().getTransportCompany();
+        Optional<Driver> driverOpt = transportCompanyRepository.findDriverById(command.driver().getId().intValue(), transportCompany);
+        Optional<Bus> busOpt = transportCompanyRepository.findBusById(command.bus().getId().intValue(), transportCompany);
 
+        boolean areAllEntitiesFound = driverOpt.isPresent() && busOpt.isPresent();
 
-        //Optional<Driver> driverOpt= driverRepository.findById(command.driver().getId());
-        Optional<Driver> driverOpt= transportCompanyRepository.findDriverByUserId(command.userId());
+        if(areAllEntitiesFound) {
+            Driver driver = driverOpt.get();
+            Bus bus = busOpt.get();
 
-        //Optional<Bus> busOpt= busRepository.findById(command.bus().getId());
-
-        Optional<Bus>busOpt= transportCompanyRepository.findBusByUserId(command.userId());
-
-        boolean areAllEntitiesFound=transportCompanyOpt.isPresent() && driverOpt.isPresent() && busOpt.isPresent();
-
-        if(areAllEntitiesFound){
-            TransportCompany transportCompany= transportCompanyOpt.get();
-            Driver driver= driverOpt.get();
-            Bus bus= busOpt.get();
-
-            AssignUnitBusCommand updatedCommand= new AssignUnitBusCommand(command.userId(), driver,bus);
-
+            AssignUnitBusCommand updatedCommand = new AssignUnitBusCommand(command.userId(), driver, bus);
             transportCompany.assignNewUnitBus(updatedCommand);
-
             transportCompanyRepository.save(transportCompany);
 
             return transportCompany.getUnitBuses().stream()
-                    .filter(unitBus -> unitBus.getDriver().equals(updatedCommand.driver())).findFirst();
-        }else{
+                    .filter(unitBus ->
+                            Objects.equals(unitBus.getDriver().getId(), command.driver().getId()) &&
+                                    Objects.equals(unitBus.getBus().getId(), command.bus().getId())
+                    ).findFirst();
+        } else {
             return Optional.empty();
         }
-
     }
 
     @Override

@@ -68,7 +68,6 @@ public class User {
         this.email= Strings.EMPTY;
         this.password= Strings.EMPTY;
         this.role=null;
-        this.transportCompany=new TransportCompany();
     }
 
     public User(String email, String password, Role role) {
@@ -81,7 +80,6 @@ public class User {
         this.email=command.email();
         this.password=command.password();
         this.role=command.role();
-        this.transportCompany= new TransportCompany();
     }
 
 

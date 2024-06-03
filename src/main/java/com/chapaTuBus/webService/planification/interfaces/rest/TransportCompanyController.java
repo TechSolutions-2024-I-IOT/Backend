@@ -125,7 +125,7 @@ public class TransportCompanyController {
         return ResponseEntity.ok(departureSchedulesRegisteredResource);
     }
 
-    @PostMapping("new-transport-company")
+    @PostMapping("/new-transport-company")
     ResponseEntity<TransportCompanyCreatedResource> createTransportCompany(@RequestParam(name = "userId") Long userId, @RequestBody CreateTransportCompanyResource createTransportCompanyResource){
 
         Optional<TransportCompany> transportCompany= transportCompanyCommandService
@@ -152,7 +152,7 @@ public class TransportCompanyController {
                 .orElseGet(()->ResponseEntity.badRequest().build());
     }
 
-    @PostMapping("register-bus")
+    @PostMapping("/register-bus")
     ResponseEntity<BusRegisteredResource>registerBus(@RequestBody RegisterBusResource registerBusResource){
 
         Optional<Bus> bus= transportCompanyCommandService.
@@ -164,7 +164,7 @@ public class TransportCompanyController {
 
     }
 
-    @PostMapping("register-schedule")
+    @PostMapping("/register-schedule")
     ResponseEntity<ScheduleCreatedResource>createNewSchedule(@RequestBody CreateScheduleResource createScheduleResource){
 
         Optional<Schedule> schedule= transportCompanyCommandService.
@@ -176,7 +176,7 @@ public class TransportCompanyController {
 
     }
 
-    @PostMapping("assign-unit-bus")
+    @PostMapping("/assign-unit-bus")
     ResponseEntity<UnitBusCreatedResource>assignUnitBus(@RequestBody AssignUnitBusResource assignUnitBusResource){
 
         Optional<UnitBus> unitBus= transportCompanyCommandService.
@@ -188,7 +188,7 @@ public class TransportCompanyController {
 
     }
 
-    @PostMapping("register-new-departure-schedule")
+    @PostMapping("/register-new-departure-schedule")
     ResponseEntity<DepartureScheduleCreatedResource>createNewDepartureSchedule(@RequestBody CreateDepartureScheduleResource createDepartureScheduleResource){
 
         Optional<DepartureSchedule> departureSchedule= transportCompanyCommandService.
