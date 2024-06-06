@@ -14,7 +14,6 @@ import java.util.List;
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 public class Schedule {
     @Id
@@ -26,13 +25,17 @@ public class Schedule {
     private String description;
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DepartureSchedule> departureSchedules = new ArrayList<>();
+    private List<DepartureSchedule> departureSchedules;
 
     @ManyToOne
     @JoinColumn(name = "transport_company_id")
     private TransportCompany transportCompany;
 
     private int user;
+
+    public Schedule() {
+        this.departureSchedules = new ArrayList<>();
+    }
 
 
 }

@@ -58,71 +58,60 @@ public class TransportCompanyController {
     }
 
     @GetMapping("/drivers")
-    ResponseEntity<List<DriverRegisteredResource>> getDrivers(@RequestParam(name = "userId") int userId){
+    ResponseEntity<List<DriverRegisteredResource>> getDrivers(@RequestParam(name = "userId") int userId) {
 
-        var getAllDriversByUserIdQuery= new GetAllDriversByUserIdQuery(userId);
+        var getAllDriversByUserIdQuery = new GetAllDriversByUserIdQuery(userId);
 
-        var drivers= transportCompanyQueryService.handle(getAllDriversByUserIdQuery);
+        var drivers = transportCompanyQueryService.handle(getAllDriversByUserIdQuery);
 
-        if(drivers.isEmpty()) return ResponseEntity.notFound().build();
-
-        var driversRegisteredResources=
-                drivers.stream().map(
-                        DriverResourceFromEntityAssembler::toResourceFromEntity
-                ).toList();
+        var driversRegisteredResources = drivers.stream()
+                .map(DriverResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
 
         return ResponseEntity.ok(driversRegisteredResources);
-
     }
 
+
     @GetMapping("/buses")
-    ResponseEntity<List<BusRegisteredResource>>getBuses(@RequestParam(name = "userId") int userId){
+    ResponseEntity<List<BusRegisteredResource>> getBuses(@RequestParam(name = "userId") int userId) {
 
-        var getAllBusesByUserIdQuery= new GetAllBusesByUserIdQuery(userId);
+        var getAllBusesByUserIdQuery = new GetAllBusesByUserIdQuery(userId);
 
-        var buses= transportCompanyQueryService.handle(getAllBusesByUserIdQuery);
+        var buses = transportCompanyQueryService.handle(getAllBusesByUserIdQuery);
 
-        if(buses.isEmpty())return ResponseEntity.notFound().build();
-
-        var busesRegisteredResources=
-                buses.stream().map(
-                        BusRegisteredResourceFromEntityAssembler::toResourceFromEntity
-                ).toList();
+        var busesRegisteredResources = buses.stream()
+                .map(BusRegisteredResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
 
         return ResponseEntity.ok(busesRegisteredResources);
     }
 
+
     @GetMapping("/unit-buses")
-    ResponseEntity<List<UnitBusCreatedResource>>getUnitBuses(@RequestParam(name = "userId") int userId){
+    ResponseEntity<List<UnitBusCreatedResource>> getUnitBuses(@RequestParam(name = "userId") int userId) {
 
-        var getAllUnitBusesByUserIdQuery= new GetAllUnitBusesByUserIdQuery(userId);
+        var getAllUnitBusesByUserIdQuery = new GetAllUnitBusesByUserIdQuery(userId);
 
-        var unitBuses= transportCompanyQueryService.handle(getAllUnitBusesByUserIdQuery);
+        var unitBuses = transportCompanyQueryService.handle(getAllUnitBusesByUserIdQuery);
 
-        if(unitBuses.isEmpty())return ResponseEntity.notFound().build();
-
-        var unitBusesRegisteredResource=
-                unitBuses.stream().map(
-                        UnitBusCreatedResourceFromEntityAssembler ::toResourceFromEntity
-                ).toList();
+        var unitBusesRegisteredResource = unitBuses.stream()
+                .map(UnitBusCreatedResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
 
         return ResponseEntity.ok(unitBusesRegisteredResource);
     }
 
     @GetMapping("/departure-schedules")
-    ResponseEntity<List<DepartureScheduleCreatedResource>>getDepartureSchedules(
-            @RequestParam(name = "userId") int userId, @RequestParam(name="scheduleId") int scheduleId){
+    ResponseEntity<List<DepartureScheduleCreatedResource>> getDepartureSchedules(
+            @RequestParam(name = "userId") int userId, @RequestParam(name = "scheduleId") int scheduleId) {
 
-        var getAllDepartureSchedulesByUserIdAndScheduleIdQuery= new GetAllDepartureSchedulesByUserIdAndScheduleIdQuery(userId, scheduleId);
+        var getAllDepartureSchedulesByUserIdAndScheduleIdQuery = new GetAllDepartureSchedulesByUserIdAndScheduleIdQuery(userId, scheduleId);
 
-        var departureSchedules= transportCompanyQueryService.handle(getAllDepartureSchedulesByUserIdAndScheduleIdQuery);
+        var departureSchedules = transportCompanyQueryService.handle(getAllDepartureSchedulesByUserIdAndScheduleIdQuery);
 
-        if(departureSchedules.isEmpty())return ResponseEntity.notFound().build();
-
-        var departureSchedulesRegisteredResource=
-                departureSchedules.stream().map(
-                        DepartureScheduleCreatedResourceFromEntityAssembler::toResourceFromEntity
-                ).toList();
+        var departureSchedulesRegisteredResource = departureSchedules.stream()
+                .map(DepartureScheduleCreatedResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
 
         return ResponseEntity.ok(departureSchedulesRegisteredResource);
     }

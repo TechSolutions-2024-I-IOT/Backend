@@ -130,17 +130,16 @@ public class TransportCompany {
         this.schedules.add(schedule);
     }
 
-    public DepartureSchedule createNewDepartureSchedule(CreateDepartureScheduleCommand command){
-
+    public DepartureSchedule createNewDepartureSchedule(CreateDepartureScheduleCommand command) {
         Optional<Schedule> optionalSchedule = this.schedules.stream()
-                .filter(s -> s.getId().equals((long)command.scheduleId()))
+                .filter(s -> s.getId().equals((long) command.scheduleId()))
                 .findFirst();
 
         if (optionalSchedule.isPresent()) {
             Schedule schedule = optionalSchedule.get();
 
             Optional<UnitBus> optionalUnitBus = this.unitBuses.stream()
-                    .filter(ub -> ub.getId().equals((long)command.unitBusId()))
+                    .filter(ub -> ub.getId().equals((long) command.unitBusId()))
                     .findFirst();
 
             if (optionalUnitBus.isPresent()) {
@@ -156,13 +155,7 @@ public class TransportCompany {
 
                 schedule.getDepartureSchedules().add(departureSchedule);
 
-                // Actualizar la lista schedules de TransportCompany
-                this.schedules = this.schedules.stream()
-                        .map(s -> s.getId().equals(schedule.getId()) ? schedule : s)
-                        .collect(Collectors.toList());
-
-                departureSchedule.setSchedule(schedule);
-
+                // Guardar el Schedule o el DepartureSchedule en el repositorio
                 return departureSchedule;
 
             } else {
@@ -172,5 +165,6 @@ public class TransportCompany {
             throw new IllegalArgumentException("Schedule not found with ID: " + command.scheduleId());
         }
     }
+
 
 }
