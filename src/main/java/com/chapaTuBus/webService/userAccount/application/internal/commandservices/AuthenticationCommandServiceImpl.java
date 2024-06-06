@@ -6,13 +6,16 @@ import com.chapaTuBus.webService.userAccount.domain.model.commands.auth.Register
 import com.chapaTuBus.webService.userAccount.domain.model.commands.users.ModifyProfileCommand;
 import com.chapaTuBus.webService.userAccount.domain.model.entities.LoginRequest;
 import com.chapaTuBus.webService.userAccount.domain.model.entities.RegisterRequest;
+import com.chapaTuBus.webService.userAccount.domain.model.entities.Role;
 import com.chapaTuBus.webService.userAccount.domain.model.valueobjects.AuthenticationResponse;
 import com.chapaTuBus.webService.userAccount.domain.model.valueobjects.Roles;
 import com.chapaTuBus.webService.userAccount.domain.model.valueobjects.TokenTypes;
 import com.chapaTuBus.webService.userAccount.domain.services.AuthenticationCommandService;
 import com.chapaTuBus.webService.userAccount.domain.services.JwtService;
+import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.RoleRepository;
 import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.TokenRepository;
 import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.UserRepository;
+import com.chapaTuBus.webService.userAccount.interfaces.rest.resources.RegisterUserResource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,13 +39,15 @@ public class AuthenticationCommandServiceImpl implements AuthenticationCommandSe
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final RoleRepository roleRepository;
 
-    public AuthenticationCommandServiceImpl(UserRepository userRepository, TokenRepository tokenRepository, JwtService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+    public AuthenticationCommandServiceImpl(UserRepository userRepository, TokenRepository tokenRepository, JwtService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -57,11 +62,25 @@ public class AuthenticationCommandServiceImpl implements AuthenticationCommandSe
         return Optional.of(createdUserResource);
     }
 
+    private Role getRoleFromResource(String role) {
+        try {
+            Roles roleType = Roles.valueOf(role);
+            // Busca el rol en la base de datos por su tipo
+            return roleRepository.findByType(roleType)
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+        } catch (IllegalArgumentException | NullPointerException e) {
+            // Si el rol es inválido o nulo, asigna el rol por defecto
+            return roleRepository.findByType(Roles.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Default role not found"));
+        }
+    }
+
     @Override
     public AuthenticationResponse register(RegisterRequest registerRequest) {
         var user = User.builder()
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .role(getRoleFromResource(registerRequest.getRole()))
                 .build();
         var savedUser = userRepository. save(user);
         var jwtToken = jwtService.generateToken((UserDetails) user);
