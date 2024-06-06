@@ -37,8 +37,14 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())  // Usa Customizer.withDefaults() en lugar de cors().and()
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/api/v1/sensor-data").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/api/v1/sensor-data"
+                        ).permitAll()
                         .requestMatchers("/api/v1/transport-company/**").authenticated()
+                        .requestMatchers("/api/v1/transport-company/all").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())

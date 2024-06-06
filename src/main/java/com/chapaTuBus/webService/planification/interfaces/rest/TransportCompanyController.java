@@ -3,10 +3,7 @@ package com.chapaTuBus.webService.planification.interfaces.rest;
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.*;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllBusesByUserIdQuery;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDepartureSchedulesByUserIdAndScheduleIdQuery;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByUserIdQuery;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllUnitBusesByUserIdQuery;
+import com.chapaTuBus.webService.planification.domain.model.queries.*;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.BusRegisteredResource;
@@ -17,6 +14,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.RegisterDriverResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.CreateScheduleResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.ScheduleCreatedResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CompleteTransportCompanyInformationResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CreateTransportCompanyResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.TransportCompanyCreatedResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.AssignUnitBusResource;
@@ -29,6 +27,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.RegisterDriverCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.schedule.CreateScheduleCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.schedule.ScheduleCreatedResourceFromEntityAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CompleteTransportCompanyInformationResoruceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CreateTransportCompanyCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.TransportCompanyCreatedResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.AssignUnitBusCommandFromResourceAssembler;
@@ -55,6 +54,21 @@ public class TransportCompanyController {
             TransportCompanyQueryService transportCompanyQueryService){
         this.transportCompanyCommandService = transportCompanyCommandService;
         this.transportCompanyQueryService = transportCompanyQueryService;
+    }
+
+    @GetMapping("/all")
+    ResponseEntity<List<CompleteTransportCompanyInformationResource>>getAllTransportCompanies(){
+
+        var getAllTransportCompaniesQuery = new GetAllTransportCompaniesQuery();
+
+        var transportCompanies= transportCompanyQueryService.handle(getAllTransportCompaniesQuery);
+
+        var transportCompaniesWithCompleteInformationResoruces= transportCompanies.stream()
+                .map(CompleteTransportCompanyInformationResoruceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+
+        return ResponseEntity.ok(transportCompaniesWithCompleteInformationResoruces);
+
     }
 
     @GetMapping("/drivers")

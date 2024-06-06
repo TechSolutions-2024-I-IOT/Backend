@@ -1,13 +1,11 @@
 package com.chapaTuBus.webService.planification.application.internal.queryservices;
 
+import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
 import com.chapaTuBus.webService.planification.domain.model.entities.DepartureSchedule;
 import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
 import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllBusesByUserIdQuery;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDepartureSchedulesByUserIdAndScheduleIdQuery;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllDriversByUserIdQuery;
-import com.chapaTuBus.webService.planification.domain.model.queries.GetAllUnitBusesByUserIdQuery;
+import com.chapaTuBus.webService.planification.domain.model.queries.*;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
 import org.springframework.stereotype.Service;
@@ -51,5 +49,10 @@ public class TransportCompanyQueryServiceImpl implements TransportCompanyQuerySe
     @Override
     public List<DepartureSchedule> handle(GetAllDepartureSchedulesByUserIdAndScheduleIdQuery query){
         return transportCompanyRepository.findAllDepartureSchedulesByUserIdAndScheduleId(query.userId(), query.scheduleId());
+    }
+
+    @Override
+    public List<TransportCompany> handle(GetAllTransportCompaniesQuery query) {
+        return transportCompanyRepository.findAll();
     }
 }
