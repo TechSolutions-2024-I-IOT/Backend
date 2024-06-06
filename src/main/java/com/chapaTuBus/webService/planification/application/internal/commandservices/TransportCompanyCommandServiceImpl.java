@@ -78,7 +78,7 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
         if(userOpt.isEmpty()) return Optional.empty();
 
         TransportCompany transportCompany = userOpt.get().getTransportCompany();
-        Optional<Driver> driverOpt = transportCompanyRepository.findDriverById(command.driver().getId().intValue(), transportCompany);
+        Optional<Driver> driverOpt = transportCompanyRepository.findDriverByIdAndTransportCompany(command.driver().getId().intValue(), transportCompany);
         Optional<Bus> busOpt = transportCompanyRepository.findBusById(command.bus().getId().intValue(), transportCompany);
 
         boolean areAllEntitiesFound = driverOpt.isPresent() && busOpt.isPresent();

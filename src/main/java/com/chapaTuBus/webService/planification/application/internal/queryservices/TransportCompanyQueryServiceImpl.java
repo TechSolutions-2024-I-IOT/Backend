@@ -10,7 +10,6 @@ import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQ
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,5 +53,10 @@ public class TransportCompanyQueryServiceImpl implements TransportCompanyQuerySe
     @Override
     public List<TransportCompany> handle(GetAllTransportCompaniesQuery query) {
         return transportCompanyRepository.findAll();
+    }
+
+    @Override
+    public Optional<Driver> handle(GetDriverByIdQuery query) {
+        return transportCompanyRepository.findDriverById(query.driverId());
     }
 }

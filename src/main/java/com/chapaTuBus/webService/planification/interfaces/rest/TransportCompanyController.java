@@ -71,6 +71,19 @@ public class TransportCompanyController {
 
     }
 
+    @GetMapping("/driverById")
+    ResponseEntity<DriverRegisteredResource> getDriverById(@RequestParam("driverId") int driverId){
+
+        var getDriverByIdQuery = new GetDriverByIdQuery(driverId);
+
+        var driver= transportCompanyQueryService.handle(getDriverByIdQuery);
+
+        var driverResource= driver.map(DriverResourceFromEntityAssembler::toResourceFromEntity);
+
+        return driverResource.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
+    }
+
     @GetMapping("/drivers")
     ResponseEntity<List<DriverRegisteredResource>> getDrivers(@RequestParam(name = "userId") int userId) {
 
