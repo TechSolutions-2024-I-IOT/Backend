@@ -25,7 +25,8 @@ public class DepartureSchedule {
     @JoinColumn(name = "schedule_id",nullable = false)
     private Schedule schedule;
 
-    @ManyToOne
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bus_unit_id")
     private UnitBus unitBus;
 

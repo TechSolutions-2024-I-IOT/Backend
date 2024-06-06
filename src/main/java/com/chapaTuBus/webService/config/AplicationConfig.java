@@ -28,7 +28,7 @@ public class AplicationConfig {
             return org.springframework.security.core.userdetails.User.builder()
                     .username(user.getEmail())
                     .password(user.getPassword())
-                    .authorities(user.getRole().getAuthority()) // assuming getAuthority() returns a collection or single authority string
+                    .authorities(user.getAuthorities()) // assuming getAuthority() returns a collection or single authority string
                     .build();
         };
     }

@@ -19,8 +19,10 @@ public class UnitBus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "unitBus",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<DepartureSchedule>departureSchedules;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "departure_schedule_id")
+    private DepartureSchedule departureSchedule;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "driver_id")
