@@ -33,6 +33,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.transform.transpo
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.TransportCompanyCreatedResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.AssignUnitBusCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.UnitBusCreatedResourceFromEntityAssembler;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/api/v1/transport-company")
+@SecurityRequirement(name="Bearer Authentication")
 public class TransportCompanyController {
 
     public final TransportCompanyCommandService transportCompanyCommandService;
