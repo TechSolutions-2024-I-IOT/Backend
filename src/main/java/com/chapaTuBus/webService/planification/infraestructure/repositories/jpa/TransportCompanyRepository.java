@@ -2,6 +2,7 @@ package com.chapaTuBus.webService.planification.infraestructure.repositories.jpa
 
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import com.chapaTuBus.webService.planification.domain.model.entities.*;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface TransportCompanyRepository extends JpaRepository<TransportCompany,Long> {
+public interface TransportCompanyRepository extends JpaRepository<TransportCompany,Long>{
 
     @Query("SELECT d FROM Driver d WHERE d.user = :userId")
     Optional<Driver> findDriverByUserId(@Param("userId") int userId);

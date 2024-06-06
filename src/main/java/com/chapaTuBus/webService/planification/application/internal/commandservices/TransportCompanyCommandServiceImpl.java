@@ -13,6 +13,7 @@ import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.
 import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
 import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -121,22 +122,21 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
 
     }
 
+    @Transactional
     @Override
     public Optional<DepartureSchedule> handle(CreateDepartureScheduleCommand command) {
+        Optional<User> userOpt = userRepository.findById((long) command.user());
 
-        Optional<User> userOpt= userRepository.findById((long) command.user());
+        if (userOpt.isEmpty()) return Optional.empty();
 
-        if(userOpt.isEmpty()) return Optional.empty();
-
-        Optional<TransportCompany> transportCompanyOpt= transportCompanyRepository.findById(userOpt.get().getTransportCompany().getId());
+        Optional<TransportCompany> transportCompanyOpt = transportCompanyRepository.findById(userOpt.get().getTransportCompany().getId());
 
         if (transportCompanyOpt.isPresent()) {
             TransportCompany transportCompany = transportCompanyOpt.get();
-            transportCompanyRepository.save(transportCompany);
 
             DepartureSchedule newDepartureSchedule = transportCompany.createNewDepartureSchedule(command);
 
-            transportCompanyRepository.save(transportCompany);
+            transportCompanyRepository.saveAndFlush(transportCompany); // Save and flush to ensure the ID is assigned
 
             return Optional.of(newDepartureSchedule);
         } else {
