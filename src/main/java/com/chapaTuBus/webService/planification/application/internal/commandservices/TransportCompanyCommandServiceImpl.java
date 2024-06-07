@@ -1,6 +1,7 @@
 package com.chapaTuBus.webService.planification.application.internal.commandservices;
 
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
+import com.chapaTuBus.webService.planification.domain.model.commands.bus.DeleteBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.ModifyBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.departureSchedule.CreateDepartureScheduleCommand;
@@ -208,7 +209,7 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
 
         if(driver.isEmpty())return Optional.empty();
 
-        Optional<TransportCompany> transportCompanyOpt= transportCompanyRepository.findByUserId(driver.get().getId());
+        Optional<TransportCompany> transportCompanyOpt= transportCompanyRepository.findByUserId((long) driver.get().getUser());
 
         if (transportCompanyOpt.isEmpty()) return Optional.empty();
 
@@ -219,9 +220,31 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
         transportCompanyRepository.save(transportCompany);
 
         return transportCompany.getDrivers().stream()
-                .filter(bus->bus.getId().equals(command.driverId()))
+                .filter(actualDriver->actualDriver.getId().equals(command.driverId()))
                 .findFirst();
 
+    }
+
+    @Override
+    public Optional<Bus> handle(DeleteBusCommand command) {
+
+        Optional<Bus> bus= transportCompanyRepository.findBusById(Math.toIntExact(command.busId()));
+
+        if(bus.isEmpty())return Optional.empty();
+
+        Optional<TransportCompany> transportCompanyOpt= transportCompanyRepository.findByUserId((long) bus.get().getUser());
+
+        if (transportCompanyOpt.isEmpty()) return Optional.empty();
+
+        TransportCompany transportCompany= transportCompanyOpt.get();
+
+        transportCompany.deleteBus(command);
+
+        transportCompanyRepository.save(transportCompany);
+
+        return transportCompany.getBuses().stream()
+                .filter(actualBus->actualBus.getId().equals(command.busId()))
+                .findFirst();
     }
 
 

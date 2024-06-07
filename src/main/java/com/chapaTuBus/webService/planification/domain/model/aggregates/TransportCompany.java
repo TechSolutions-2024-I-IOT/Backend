@@ -1,5 +1,6 @@
 package com.chapaTuBus.webService.planification.domain.model.aggregates;
 
+import com.chapaTuBus.webService.planification.domain.model.commands.bus.DeleteBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.ModifyBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.departureSchedule.CreateDepartureScheduleCommand;
@@ -154,6 +155,21 @@ public class TransportCompany {
 
         Driver driver=selectedDriver.get();
         driver.setDeleted(true);
+
+    }
+
+    public void deleteBus(DeleteBusCommand command){
+
+        Optional<Bus> selectedBus= this.getBuses().stream()
+                .filter(bus-> command.busId().equals(bus.getId()))
+                .findFirst();
+
+        if(selectedBus.isEmpty())return;
+
+        Bus bus= selectedBus.get();
+
+        bus.setDeleted(true);
+
 
     }
 

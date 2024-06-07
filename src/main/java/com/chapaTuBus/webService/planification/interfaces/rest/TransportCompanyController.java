@@ -7,10 +7,7 @@ import com.chapaTuBus.webService.planification.domain.model.entities.*;
 import com.chapaTuBus.webService.planification.domain.model.queries.*;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.BusRegisteredResource;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.ModifiedBusResource;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.ModifyBusResource;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.RegisterBusResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.departureSchedule.CreateDepartureScheduleResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.departureSchedule.DepartureScheduleCreatedResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.*;
@@ -21,10 +18,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.transpo
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.TransportCompanyCreatedResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.AssignUnitBusResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.UnitBusCreatedResource;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.BusRegisteredResourceFromEntityAssembler;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.ModifiedBusResourceFromEntityAssembler;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.ModifyBusCommandFromResourceAssembler;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.RegisterBusCommandFromResourceAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.CreateDepartureScheduleCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.DepartureScheduleCreatedResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.*;
@@ -263,7 +257,21 @@ public class TransportCompanyController {
         return driverOpt.map(driver -> {
             String message = "El driver de nombre " + driver.getFirstName() + " " + driver.getLastName() + " ha sido correctamente eliminado.";
             return ResponseEntity.ok(message);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+        }).orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
+    @PatchMapping("/bus/delete")
+    public ResponseEntity<String> softDeleteBus(@RequestBody SoftDeleteBusResource resource){
+
+        var deleteBusCommand= DeleteBusCommandFromResourceAssembler.toCommand(resource);
+
+        var busOpt= transportCompanyCommandService.handle(deleteBusCommand);
+
+        return busOpt.map(bus->{
+            String message= "El bus de placa "+bus.getLicensePlate()+" ha sido eliminado correctamente";
+            return ResponseEntity.ok(message);
+        }).orElseGet(()->ResponseEntity.badRequest().build());
+
     }
 
 }
