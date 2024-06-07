@@ -6,7 +6,8 @@ public record UserCompleteProfileResource
                 String email,
                 String firstName,
                 String lastName,
-                String photoUrl
+                String photoUrl,
+                String role
          )
 {
 }

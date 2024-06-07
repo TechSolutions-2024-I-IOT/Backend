@@ -11,7 +11,8 @@ public class UserCompleteProfileResourceFromEntityAssembler {
                 entity.getEmail(),
                 entity.getProfile().getFirst_name(),
                 entity.getProfile().getLast_name(),
-                entity.getProfile().getPhoto_url()
+                entity.getProfile().getPhoto_url(),
+                entity.getRole().getStringName()
         );
     }
 }
