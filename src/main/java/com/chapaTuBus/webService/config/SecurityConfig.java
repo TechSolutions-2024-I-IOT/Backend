@@ -41,7 +41,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "/api/v1/sensor-data"
+                                "/api/v1/sensor-data",
+                                "api/v1/location-data"
                         ).permitAll()
                         .requestMatchers("/api/v1/transport-company/all").permitAll()
                         .requestMatchers("/api/v1/transport-company/**").authenticated()
