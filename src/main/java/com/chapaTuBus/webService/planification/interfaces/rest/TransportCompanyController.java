@@ -11,6 +11,8 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.Reg
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.departureSchedule.CreateDepartureScheduleResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.departureSchedule.DepartureScheduleCreatedResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.DriverRegisteredResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.ModifiedDriverResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.ModifyDriverResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.RegisterDriverResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.CreateScheduleResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.ScheduleCreatedResource;
@@ -24,6 +26,8 @@ import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.Reg
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.CreateDepartureScheduleCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.DepartureScheduleCreatedResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.DriverResourceFromEntityAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.ModifiedDriverResourceFromEntityAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.ModifyDriverCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.RegisterDriverCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.schedule.CreateScheduleCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.schedule.ScheduleCreatedResourceFromEntityAssembler;
@@ -33,6 +37,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.transform.transpo
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.AssignUnitBusCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.UnitBusCreatedResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -219,6 +224,19 @@ public class TransportCompanyController {
 
     }
 
+    @PutMapping("/driver")
+    public ResponseEntity<ModifiedDriverResource> modifyDriverByDriverId(
+            @RequestParam("driverId") Long driverId,
+            @RequestParam("userId") int userId,
+            @RequestBody ModifyDriverResource resource) {
+
+        var modifyDriverCommand = ModifyDriverCommandFromResourceAssembler.toCommand(driverId, userId, resource);
+        var driver = transportCompanyCommandService.handle(modifyDriverCommand);
+
+        return driver.map(modifiedDriver ->
+                        ResponseEntity.ok(ModifiedDriverResourceFromEntityAssembler.toResourceFromEntity(modifiedDriver)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
 
 }

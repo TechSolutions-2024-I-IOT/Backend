@@ -3,6 +3,7 @@ package com.chapaTuBus.webService.planification.domain.services;
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.departureSchedule.CreateDepartureScheduleCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.driver.ModifyDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
@@ -18,4 +19,5 @@ public interface TransportCompanyCommandService {
     Optional<UnitBus> handle(AssignUnitBusCommand command);
     Optional<Schedule>handle(CreateScheduleCommand command);
     Optional<DepartureSchedule>handle(CreateDepartureScheduleCommand command);
+    Optional<Driver> handle(ModifyDriverCommand command);
 }

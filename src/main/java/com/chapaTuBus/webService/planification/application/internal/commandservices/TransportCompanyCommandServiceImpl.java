@@ -3,6 +3,7 @@ package com.chapaTuBus.webService.planification.application.internal.commandserv
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.departureSchedule.CreateDepartureScheduleCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.driver.ModifyDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
@@ -165,6 +166,20 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
             return Optional.empty();
         }
 
+    }
+
+    @Override
+    public Optional<Driver> handle(ModifyDriverCommand command) {
+        Optional<TransportCompany> transportCompanyOpt = transportCompanyRepository.findByUserId((long) command.userId());
+        if (transportCompanyOpt.isEmpty()) return Optional.empty();
+
+        TransportCompany transportCompany = transportCompanyOpt.get();
+        transportCompany.modifyDriver(command);
+        transportCompanyRepository.save(transportCompany);
+
+        return transportCompany.getDrivers().stream()
+                .filter(driver -> driver.getId().equals(command.driverId()))
+                .findFirst();
     }
 
 

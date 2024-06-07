@@ -2,6 +2,7 @@ package com.chapaTuBus.webService.planification.domain.model.aggregates;
 
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.departureSchedule.CreateDepartureScheduleCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.driver.ModifyDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
@@ -117,6 +118,26 @@ public class TransportCompany {
         this.unitBuses.add(unitBus);
     }
 
+    public void modifyDriver(ModifyDriverCommand command){
+
+        Optional<Driver> selectedDriver= this.getDrivers().stream()
+                .filter(driver-> command.driverId().equals(driver.getId()))
+                .findFirst();
+
+        if(selectedDriver.isEmpty())return ;
+
+        Driver driver = selectedDriver.get();
+        driver.setDni(command.dni());
+        driver.setDriverLicenseNumber(command.driverLicenseNumber());
+        driver.setEmail(command.email());
+        driver.setLastName(command.lastName());
+        driver.setFirstName(command.firstName());
+        driver.setPhoneNumber(command.phoneNumber());
+        driver.setPhotoUrl(command.photoUrl());
+
+
+
+    }
 
     public void createNewSchedule(CreateScheduleCommand command) {
         Schedule schedule= Schedule.builder()
