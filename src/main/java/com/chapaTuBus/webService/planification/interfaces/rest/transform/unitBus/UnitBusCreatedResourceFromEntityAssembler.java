@@ -12,7 +12,8 @@ public class UnitBusCreatedResourceFromEntityAssembler {
                 entity.getId(),
                 new DriverDto(entity.getDriver().getId(), entity.getDriver().getFirstName(), entity.getDriver().getLastName()),
                 new BusDto(entity.getBus().getId(),entity.getBus().getLicensePlate()),
-                entity.getUser()
+                entity.getUser(),
+                entity.isDeleted()
         );
     }
 }

@@ -14,7 +14,8 @@ public class ModifiedDriverResourceFromEntityAssembler {
                 entity.getDni(),
                 entity.getDriverLicenseNumber(),
                 entity.getPhoneNumber(),
-                entity.getEmail()
+                entity.getEmail(),
+                entity.isDeleted()
         );
     }
 }

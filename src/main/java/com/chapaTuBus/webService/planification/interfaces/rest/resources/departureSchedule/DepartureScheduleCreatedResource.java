@@ -8,6 +8,7 @@ public record DepartureScheduleCreatedResource(
         int roundNumber,
         UnitBusDto unitBusDto,
         ScheduleDto scheduleDto,
-        int user
+        int user,
+        boolean isDeleted
 ) {
 }

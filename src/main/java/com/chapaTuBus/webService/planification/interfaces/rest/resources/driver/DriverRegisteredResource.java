@@ -9,6 +9,7 @@ public record DriverRegisteredResource (
         String driverLicenseNumber,
         String phoneNumber,
         String email,
-        int user
+        int user,
+        boolean isDeleted
         ){
 }

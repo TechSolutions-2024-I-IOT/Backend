@@ -36,6 +36,9 @@ public class Driver {
     @JoinColumn(name = "transport_company_id")
     private TransportCompany transportCompany;
 
+    @Column(nullable = false,columnDefinition = "boolean default false")
+    private boolean isDeleted;
+
 }
 
 

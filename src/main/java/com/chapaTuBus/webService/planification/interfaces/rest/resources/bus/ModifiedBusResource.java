@@ -6,6 +6,7 @@ public record ModifiedBusResource(
         int seatingCapacity,
         int totalCapacity,
         int year,
-        String state
+        String state,
+        boolean isDeleted
 ){
 }

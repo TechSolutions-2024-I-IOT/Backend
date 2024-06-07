@@ -9,6 +9,7 @@ public record BusRegisteredResource(
         int totalCapacity,
         int year,
         BusStates state,
-        int user
+        int user,
+        boolean isDeleted
 ) {
 }

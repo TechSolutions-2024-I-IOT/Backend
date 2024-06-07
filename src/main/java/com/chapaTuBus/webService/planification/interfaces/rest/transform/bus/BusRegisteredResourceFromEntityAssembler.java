@@ -13,7 +13,8 @@ public class BusRegisteredResourceFromEntityAssembler {
                 entity.getTotalCapacity(),
                 entity.getYear(),
                 entity.getState(),
-                entity.getUser()
+                entity.getUser(),
+                entity.isDeleted()
         );
     }
 }

@@ -4,6 +4,7 @@ import com.chapaTuBus.webService.planification.domain.model.aggregates.Transport
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.ModifyBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.departureSchedule.CreateDepartureScheduleCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.driver.DeleteDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.ModifyDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
@@ -198,6 +199,29 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
         return transportCompany.getBuses().stream()
                 .filter(bus-> bus.getId().equals(command.busId()))
                 .findFirst();
+    }
+
+    @Override
+    public Optional<Driver> handle(DeleteDriverCommand command) {
+
+        Optional<Driver> driver= transportCompanyRepository.findDriverById(Math.toIntExact(command.driverId()));
+
+        if(driver.isEmpty())return Optional.empty();
+
+        Optional<TransportCompany> transportCompanyOpt= transportCompanyRepository.findByUserId(driver.get().getId());
+
+        if (transportCompanyOpt.isEmpty()) return Optional.empty();
+
+        TransportCompany transportCompany= transportCompanyOpt.get();
+
+        transportCompany.deleteDriver(command);
+
+        transportCompanyRepository.save(transportCompany);
+
+        return transportCompany.getDrivers().stream()
+                .filter(bus->bus.getId().equals(command.driverId()))
+                .findFirst();
+
     }
 
 

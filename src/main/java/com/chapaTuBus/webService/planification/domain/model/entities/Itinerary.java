@@ -23,4 +23,7 @@ public class Itinerary {
     @OneToMany(mappedBy = "itinerary",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Stop>stops;
 
+    @Column(nullable = false,columnDefinition = "boolean default false")
+    private boolean isDeleted;
+
 }

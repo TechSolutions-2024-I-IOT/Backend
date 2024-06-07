@@ -35,7 +35,8 @@ public class DepartureScheduleCreatedResourceFromEntityAssembler {
                 entity.getRoundNumber(),
                 new UnitBusDto(entity.getUnitBus().getId(),driverDto,busDto),
                 scheduleDto,
-                entity.getUser()
+                entity.getUser(),
+                entity.isDeleted()
         );
     }
 }

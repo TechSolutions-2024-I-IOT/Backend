@@ -9,7 +9,8 @@ public record ModifiedDriverResource
                 String dni,
                 String driverLicenseNumber,
                 String phoneNumber,
-                String email
+                String email,
+                boolean isDeleted
         )
 {
 }

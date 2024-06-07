@@ -13,7 +13,8 @@ public class ModifiedBusResourceFromEntityAssembler {
                 entity.getSeatingCapacity(),
                 entity.getTotalCapacity(),
                 entity.getYear(),
-                entity.getState().name()
+                entity.getState().name(),
+                entity.isDeleted()
         );
     }
 }

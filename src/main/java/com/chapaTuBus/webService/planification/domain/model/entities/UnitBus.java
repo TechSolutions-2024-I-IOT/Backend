@@ -38,4 +38,7 @@ public class UnitBus {
 
     private int user;
 
+    @Column(nullable = false,columnDefinition = "boolean default false")
+    private boolean isDeleted;
+
 }

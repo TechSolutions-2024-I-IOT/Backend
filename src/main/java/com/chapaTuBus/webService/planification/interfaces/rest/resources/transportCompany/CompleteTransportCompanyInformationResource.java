@@ -8,6 +8,7 @@ public record CompleteTransportCompanyInformationResource(
         String busImageUrl,
         String logoImageUrl,
         String description,
-        UserDto user
+        UserDto user,
+        boolean isDeleted
 ) {
 }

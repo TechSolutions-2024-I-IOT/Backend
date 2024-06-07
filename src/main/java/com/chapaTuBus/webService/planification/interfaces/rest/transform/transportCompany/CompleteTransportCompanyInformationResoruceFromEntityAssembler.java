@@ -25,7 +25,8 @@ public class CompleteTransportCompanyInformationResoruceFromEntityAssembler {
             entity.getBusImageUrl(),
                 entity.getLogoImageUrl(),
                 entity.getDescription(),
-                userDto
+                userDto,
+                entity.isDeleted()
         );
 
     }

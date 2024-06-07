@@ -8,6 +8,7 @@ public record UnitBusCreatedResource (
         Long id,
         DriverDto driver,
         BusDto bus,
-        int user
+        int user,
+        boolean isDeleted
 ){
 }

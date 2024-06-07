@@ -3,6 +3,7 @@ package com.chapaTuBus.webService.planification.domain.model.aggregates;
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.ModifyBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.departureSchedule.CreateDepartureScheduleCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.driver.DeleteDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.ModifyDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
@@ -58,6 +59,9 @@ public class TransportCompany {
 
     @OneToMany(mappedBy = "transportCompany",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Schedule> schedules;
+
+    @Column(nullable = false,columnDefinition = "boolean default false")
+    private boolean isDeleted;
 
     public TransportCompany(){
         this.name= Strings.EMPTY;
@@ -137,6 +141,19 @@ public class TransportCompany {
         driver.setFirstName(command.firstName());
         driver.setPhoneNumber(command.phoneNumber());
         driver.setPhotoUrl(command.photoUrl());
+
+    }
+
+    public void deleteDriver(DeleteDriverCommand command){
+
+        Optional<Driver> selectedDriver= this.getDrivers().stream()
+                .filter(driver-> command.driverId().equals(driver.getId()))
+                .findFirst();
+
+        if(selectedDriver.isEmpty())return ;
+
+        Driver driver=selectedDriver.get();
+        driver.setDeleted(true);
 
     }
 

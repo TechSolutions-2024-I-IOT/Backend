@@ -21,4 +21,6 @@ public class Stop {
     @JoinColumn(name = "itinerary_id")
     private Itinerary itinerary;
 
+    @Column(nullable = false,columnDefinition = "boolean default false")
+    private boolean isDeleted;
 }

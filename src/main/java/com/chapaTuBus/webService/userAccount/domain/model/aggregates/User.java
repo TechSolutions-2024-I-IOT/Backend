@@ -60,6 +60,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
 
+    @Column(nullable = false,columnDefinition = "boolean default false")
+    private boolean isDeleted;
+
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();
