@@ -2,6 +2,7 @@ package com.chapaTuBus.webService.userAccount.domain.model.aggregates;
 
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import com.chapaTuBus.webService.userAccount.domain.model.commands.auth.RegisterUserCommand;
+import com.chapaTuBus.webService.userAccount.domain.model.commands.users.ModifyProfileCommand;
 import com.chapaTuBus.webService.userAccount.domain.model.entities.Profile;
 import com.chapaTuBus.webService.userAccount.domain.model.entities.Role;
 import jakarta.persistence.*;
@@ -88,11 +89,15 @@ public class User implements UserDetails {
         this.role = command.role();
     }
 
+    public void modifyProfile(ModifyProfileCommand command){
+        this.profile.setFirst_name(command.firstName());
+        this.profile.setLast_name(command.lastName());
+        this.profile.setPhoto_url(command.photoUrl());
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Implementa la lógica para obtener las autoridades del usuario
         return List.of(new SimpleGrantedAuthority(role.getStringName()));
-        //return List.of(role);
     }
 
     @Override
