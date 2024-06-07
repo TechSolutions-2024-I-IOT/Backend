@@ -1,10 +1,7 @@
 package com.chapaTuBus.webService.planification.domain.services;
 
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
-import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
-import com.chapaTuBus.webService.planification.domain.model.entities.DepartureSchedule;
-import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
-import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
+import com.chapaTuBus.webService.planification.domain.model.entities.*;
 import com.chapaTuBus.webService.planification.domain.model.queries.*;
 
 import java.util.List;
@@ -17,4 +14,5 @@ public interface TransportCompanyQueryService {
     List<DepartureSchedule>handle(GetAllDepartureSchedulesByUserIdAndScheduleIdQuery query);
     List<TransportCompany>handle(GetAllTransportCompaniesQuery query);
     Optional<Driver> handle(GetDriverByIdQuery query);
+    List<Schedule> handle(GetAllSchedulesByUserIdQuery query);
 }

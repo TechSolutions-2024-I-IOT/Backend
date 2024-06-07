@@ -126,6 +126,22 @@ public class TransportCompanyController {
         return ResponseEntity.ok(unitBusesRegisteredResource);
     }
 
+    @GetMapping("/schedules")
+    ResponseEntity<List<ScheduleCreatedResource>> getSchedules(@RequestParam(name = "userId") int userId){
+
+        var getAllSchedulesByUserIdQuery= new GetAllSchedulesByUserIdQuery(userId);
+
+        var schedules= transportCompanyQueryService.handle(getAllSchedulesByUserIdQuery);
+
+        var schedulesRegisteredResource= schedules.stream()
+                .map(ScheduleCreatedResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+
+        return ResponseEntity.ok(schedulesRegisteredResource);
+
+    }
+
+
     @GetMapping("/departure-schedules")
     ResponseEntity<List<DepartureScheduleCreatedResource>> getDepartureSchedules(
             @RequestParam(name = "userId") int userId, @RequestParam(name = "scheduleId") int scheduleId) {
@@ -141,16 +157,17 @@ public class TransportCompanyController {
         return ResponseEntity.ok(departureSchedulesRegisteredResource);
     }
 
+
     @PostMapping("/new-transport-company")
     ResponseEntity<TransportCompanyCreatedResource> createTransportCompany(@RequestParam(name = "userId") Long userId, @RequestBody CreateTransportCompanyResource createTransportCompanyResource){
 
         Optional<TransportCompany> transportCompany= transportCompanyCommandService
                 .handle(
                         CreateTransportCompanyCommandFromResourceAssembler.toCommand(userId,createTransportCompanyResource)
-                        );
+                );
 
         return transportCompany.map(actualTransportCompany->
-                new ResponseEntity<>(TransportCompanyCreatedResourceFromEntityAssembler.toResourceFromEntity(actualTransportCompany),CREATED))
+                        new ResponseEntity<>(TransportCompanyCreatedResourceFromEntityAssembler.toResourceFromEntity(actualTransportCompany),CREATED))
                 .orElseGet(()->ResponseEntity.badRequest().build());
 
     }
@@ -160,11 +177,11 @@ public class TransportCompanyController {
 
         Optional<Driver> driver= transportCompanyCommandService.
                 //Execute the command
-                handle(RegisterDriverCommandFromResourceAssembler.toCommand(registerDriverResource));
+                        handle(RegisterDriverCommandFromResourceAssembler.toCommand(registerDriverResource));
 
         //Return
         return driver.map(actualDriver->
-                new ResponseEntity<>(DriverResourceFromEntityAssembler.toResourceFromEntity(actualDriver),CREATED))
+                        new ResponseEntity<>(DriverResourceFromEntityAssembler.toResourceFromEntity(actualDriver),CREATED))
                 .orElseGet(()->ResponseEntity.badRequest().build());
     }
 
@@ -175,7 +192,7 @@ public class TransportCompanyController {
                 handle(RegisterBusCommandFromResourceAssembler.toCommand(registerBusResource));
 
         return bus.map(actualBus->
-                new ResponseEntity<>(BusRegisteredResourceFromEntityAssembler.toResourceFromEntity(actualBus),CREATED))
+                        new ResponseEntity<>(BusRegisteredResourceFromEntityAssembler.toResourceFromEntity(actualBus),CREATED))
                 .orElseGet(()->ResponseEntity.badRequest().build());
 
     }
@@ -187,7 +204,7 @@ public class TransportCompanyController {
                 handle(CreateScheduleCommandFromResourceAssembler.toCommand(createScheduleResource));
 
         return schedule.map(actualSchedule->
-                new ResponseEntity<>(ScheduleCreatedResourceFromEntityAssembler.toResourceFromEntity(actualSchedule),CREATED))
+                        new ResponseEntity<>(ScheduleCreatedResourceFromEntityAssembler.toResourceFromEntity(actualSchedule),CREATED))
                 .orElseGet(()->ResponseEntity.badRequest().build());
 
     }
@@ -199,7 +216,7 @@ public class TransportCompanyController {
                 handle(AssignUnitBusCommandFromResourceAssembler.toCommand(assignUnitBusResource));
 
         return unitBus.map(actualBus->
-                new ResponseEntity<>(UnitBusCreatedResourceFromEntityAssembler.toResourceFromEntity(actualBus),CREATED))
+                        new ResponseEntity<>(UnitBusCreatedResourceFromEntityAssembler.toResourceFromEntity(actualBus),CREATED))
                 .orElseGet(()->ResponseEntity.badRequest().build());
 
     }
@@ -211,7 +228,7 @@ public class TransportCompanyController {
                 handle(CreateDepartureScheduleCommandFromResourceAssembler.toCommand(createDepartureScheduleResource));
 
         return departureSchedule.map(actualDepartureSchedule->
-                new ResponseEntity<>(DepartureScheduleCreatedResourceFromEntityAssembler.toResourceFromEntity(actualDepartureSchedule),CREATED))
+                        new ResponseEntity<>(DepartureScheduleCreatedResourceFromEntityAssembler.toResourceFromEntity(actualDepartureSchedule),CREATED))
                 .orElseGet(()->ResponseEntity.badRequest().build());
 
 
@@ -242,7 +259,7 @@ public class TransportCompanyController {
         var bus = transportCompanyCommandService.handle(modifyBusCommand);
 
         return bus.map(modifiedBus->
-                    ResponseEntity.ok(ModifiedBusResourceFromEntityAssembler.toResourceFromEntity(modifiedBus)))
+                        ResponseEntity.ok(ModifiedBusResourceFromEntityAssembler.toResourceFromEntity(modifiedBus)))
                 .orElseGet(()->ResponseEntity.notFound().build());
 
 

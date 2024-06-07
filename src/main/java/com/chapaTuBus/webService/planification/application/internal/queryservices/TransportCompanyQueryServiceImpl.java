@@ -1,10 +1,7 @@
 package com.chapaTuBus.webService.planification.application.internal.queryservices;
 
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
-import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
-import com.chapaTuBus.webService.planification.domain.model.entities.DepartureSchedule;
-import com.chapaTuBus.webService.planification.domain.model.entities.Driver;
-import com.chapaTuBus.webService.planification.domain.model.entities.UnitBus;
+import com.chapaTuBus.webService.planification.domain.model.entities.*;
 import com.chapaTuBus.webService.planification.domain.model.queries.*;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
@@ -41,7 +38,7 @@ public class TransportCompanyQueryServiceImpl implements TransportCompanyQuerySe
 
     @Override
     public List<UnitBus> handle(GetAllUnitBusesByUserIdQuery query) {
-       // return unitBusRepository.findAllByUser(query.id());
+        // return unitBusRepository.findAllByUser(query.id());
         return transportCompanyRepository.findUnitBusesByUserId(query.id());
     }
 
@@ -58,5 +55,10 @@ public class TransportCompanyQueryServiceImpl implements TransportCompanyQuerySe
     @Override
     public Optional<Driver> handle(GetDriverByIdQuery query) {
         return transportCompanyRepository.findDriverById(query.driverId());
+    }
+
+    @Override
+    public List<Schedule> handle(GetAllSchedulesByUserIdQuery query) {
+        return transportCompanyRepository.findSchedulesByUserId(query.userId());
     }
 }

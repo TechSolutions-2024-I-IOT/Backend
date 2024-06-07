@@ -27,6 +27,9 @@ public interface TransportCompanyRepository extends JpaRepository<TransportCompa
     @Query("SELECT b FROM Bus b JOIN b.transportCompany tc WHERE tc.user.id = :userId")
     List<Bus> findBusesByUserId(@Param("userId") int userId);
 
+    @Query("SELECT s FROM Schedule s JOIN s.transportCompany tc WHERE tc.user.id =:userId")
+    List<Schedule> findSchedulesByUserId(@Param("userId") int userId);
+
     @Query("SELECT d FROM Driver d WHERE d.id = :driverId AND d.transportCompany = :transportCompany")
     Optional<Driver> findDriverByIdAndTransportCompany(@Param("driverId") int driverId, @Param("transportCompany") TransportCompany transportCompany);
 
