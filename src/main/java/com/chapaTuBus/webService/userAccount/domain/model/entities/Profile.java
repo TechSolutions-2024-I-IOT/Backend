@@ -25,5 +25,9 @@ public class Profile {
     private String last_name;
     private String photo_url;
 
+    public Profile(String first_name, String last_name) {
+        this.first_name = first_name;
+        this.last_name = last_name;
+    }
 
 }
