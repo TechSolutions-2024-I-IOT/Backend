@@ -1,5 +1,6 @@
 package com.chapaTuBus.webService.planification.domain.model.aggregates;
 
+import com.chapaTuBus.webService.planification.domain.model.commands.bus.ModifyBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.bus.RegisterBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.departureSchedule.CreateDepartureScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.ModifyDriverCommand;
@@ -8,7 +9,9 @@ import com.chapaTuBus.webService.planification.domain.model.commands.schedule.Cr
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.AssignUnitBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.*;
+import com.chapaTuBus.webService.planification.domain.model.valueobjects.BusStates;
 import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
+import com.chapaTuBus.webService.userAccount.domain.model.entities.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -135,7 +138,23 @@ public class TransportCompany {
         driver.setPhoneNumber(command.phoneNumber());
         driver.setPhotoUrl(command.photoUrl());
 
+    }
 
+    public void modifyBus(ModifyBusCommand command){
+
+        Optional<Bus> selectedBus= this.getBuses().stream()
+                .filter(bus-> command.busId().equals(bus.getId()))
+                .findFirst();
+
+        if(selectedBus.isEmpty())return;
+
+        Bus bus= selectedBus.get();
+
+        bus.setLicensePlate(command.licensePlate());
+        bus.setSeatingCapacity(command.seatingCapacity());
+        bus.setTotalCapacity(command.totalCapacity());
+        bus.setYear(command.year());
+        bus.setState(BusStates.valueOf(command.state()));
 
     }
 

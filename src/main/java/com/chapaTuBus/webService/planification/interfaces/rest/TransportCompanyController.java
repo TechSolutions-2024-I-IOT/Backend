@@ -7,6 +7,8 @@ import com.chapaTuBus.webService.planification.domain.model.queries.*;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyQueryService;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.BusRegisteredResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.ModifiedBusResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.ModifyBusResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.RegisterBusResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.departureSchedule.CreateDepartureScheduleResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.departureSchedule.DepartureScheduleCreatedResource;
@@ -22,6 +24,8 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.transpo
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.AssignUnitBusResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.UnitBusCreatedResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.BusRegisteredResourceFromEntityAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.ModifiedBusResourceFromEntityAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.ModifyBusCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.RegisterBusCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.CreateDepartureScheduleCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.DepartureScheduleCreatedResourceFromEntityAssembler;
@@ -238,5 +242,21 @@ public class TransportCompanyController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PutMapping("bus")
+    public ResponseEntity<ModifiedBusResource> modifyBusByBusId(
+            @RequestParam("busId") Long busId,
+            @RequestParam("userId") int userId,
+            @RequestBody ModifyBusResource resource){
+
+        var modifyBusCommand= ModifyBusCommandFromResourceAssembler.toCommand(busId,userId,resource);
+
+        var bus = transportCompanyCommandService.handle(modifyBusCommand);
+
+        return bus.map(modifiedBus->
+                    ResponseEntity.ok(ModifiedBusResourceFromEntityAssembler.toResourceFromEntity(modifiedBus)))
+                .orElseGet(()->ResponseEntity.notFound().build());
+
+
+    }
 
 }
