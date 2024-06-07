@@ -62,13 +62,12 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
 
         Optional<TransportCompany> transportCompanyOpt=transportCompanyRepository.findById(userOpt.get().getTransportCompany().getId());
 
-        if(transportCompanyOpt.isPresent()){
-            TransportCompany transportCompany= transportCompanyOpt.get();
-            transportCompany.registerNewBus(command);
+        if (transportCompanyOpt.isPresent()) {
+            TransportCompany transportCompany = transportCompanyOpt.get();
+            Bus newBus = transportCompany.registerNewBus(command);
             transportCompanyRepository.save(transportCompany);
-            return transportCompany.getBuses().stream()
-                    .filter(bus->bus.getLicensePlate().equals(command.licensePlate())).findFirst();
-        }else{
+            return Optional.of(newBus);
+        } else {
             return Optional.empty();
         }
 
@@ -79,7 +78,7 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
     @Override
     public Optional<UnitBus> handle(AssignUnitBusCommand command) {
         Optional<User> userOpt = userRepository.findById((long) command.userId());
-        if(userOpt.isEmpty()) return Optional.empty();
+        if (userOpt.isEmpty()) return Optional.empty();
 
         TransportCompany transportCompany = userOpt.get().getTransportCompany();
         Optional<Driver> driverOpt = transportCompanyRepository.findDriverByIdAndTransportCompany(command.driver().getId().intValue(), transportCompany);
@@ -87,23 +86,20 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
 
         boolean areAllEntitiesFound = driverOpt.isPresent() && busOpt.isPresent();
 
-        if(areAllEntitiesFound) {
+        if (areAllEntitiesFound) {
             Driver driver = driverOpt.get();
             Bus bus = busOpt.get();
 
             AssignUnitBusCommand updatedCommand = new AssignUnitBusCommand(command.userId(), driver, bus);
-            transportCompany.assignNewUnitBus(updatedCommand);
+            UnitBus newUnitBus = transportCompany.assignNewUnitBus(updatedCommand);
             transportCompanyRepository.save(transportCompany);
 
-            return transportCompany.getUnitBuses().stream()
-                    .filter(unitBus ->
-                            Objects.equals(unitBus.getDriver().getId(), command.driver().getId()) &&
-                                    Objects.equals(unitBus.getBus().getId(), command.bus().getId())
-                    ).findFirst();
+            return Optional.of(newUnitBus);
         } else {
             return Optional.empty();
         }
     }
+
 
     @Override
     public Optional<Schedule> handle(CreateScheduleCommand command) {
@@ -116,10 +112,9 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
 
         if(transportCompanyOpt.isPresent()){
             TransportCompany transportCompany= transportCompanyOpt.get();
-            transportCompany.createNewSchedule(command);
+            Schedule newSchedule = transportCompany.createNewSchedule(command);
             transportCompanyRepository.save(transportCompany);
-            return transportCompany.getSchedules().stream()
-                    .filter(schedule -> schedule.getDate().equals(command.date())).findFirst();
+            return Optional.of(newSchedule);
         }else{
             return Optional.empty();
         }
@@ -163,8 +158,8 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
             TransportCompany transportCompany= transportCompanyOpt.get();
             transportCompany.registerNewDriver(command);
             transportCompanyRepository.save(transportCompany);
-            return transportCompany.getDrivers().stream().
-                    filter(driver -> driver.getDni().equals(command.dni())).findFirst();
+            Driver newlyRegisteredDriver = transportCompany.getDrivers().get(transportCompany.getDrivers().size() - 1);
+            return Optional.of(newlyRegisteredDriver);
         }else{
             return Optional.empty();
         }

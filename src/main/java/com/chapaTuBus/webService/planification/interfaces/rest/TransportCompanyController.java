@@ -13,6 +13,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.departu
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.CreateScheduleResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.ScheduleCreatedResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.AllTransportCompanyInformationResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CompleteTransportCompanyInformationResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CreateTransportCompanyResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.TransportCompanyCreatedResource;
@@ -24,6 +25,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.transform.departu
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.schedule.CreateScheduleCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.schedule.ScheduleCreatedResourceFromEntityAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.AllTransportCompanyInformationResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CompleteTransportCompanyInformationResoruceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CreateTransportCompanyCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.TransportCompanyCreatedResourceFromEntityAssembler;
@@ -69,6 +71,19 @@ public class TransportCompanyController {
 
     }
 
+    @GetMapping("/completeInformationById")
+    ResponseEntity<AllTransportCompanyInformationResource>getAllTransportCompanyInformation(@RequestParam("transportCompanyId") Long transportCompanyId){
+
+        var getTransportCompanyInformationByIdQuery= new GetTransportCompanyInformationByIdQuery(transportCompanyId);
+
+        var transportCompany = transportCompanyQueryService.handle(getTransportCompanyInformationByIdQuery);
+
+        var allTransportCompanyInformationResource= transportCompany.map(AllTransportCompanyInformationResourceFromEntityAssembler::toResourceFromEntity);
+
+        return allTransportCompanyInformationResource.map(ResponseEntity::ok).orElseGet(()->ResponseEntity.notFound().build());
+
+    }
+
     @GetMapping("/driverById")
     ResponseEntity<DriverRegisteredResource> getDriverById(@RequestParam("driverId") int driverId){
 
@@ -95,7 +110,6 @@ public class TransportCompanyController {
 
         return ResponseEntity.ok(driversRegisteredResources);
     }
-
 
     @GetMapping("/buses")
     ResponseEntity<List<BusRegisteredResource>> getBuses(@RequestParam(name = "userId") int userId) {

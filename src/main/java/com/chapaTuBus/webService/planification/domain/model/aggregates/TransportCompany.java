@@ -101,7 +101,7 @@ public class TransportCompany {
 
     }
 
-    public void registerNewBus(RegisterBusCommand command){
+    public Bus registerNewBus(RegisterBusCommand command) {
         Bus bus = Bus.builder()
                 .state(command.state())
                 .year(command.year())
@@ -113,9 +113,11 @@ public class TransportCompany {
                 .build();
 
         this.buses.add(bus);
+        return bus;
     }
 
-    public void assignNewUnitBus(AssignUnitBusCommand command){
+
+    public UnitBus assignNewUnitBus(AssignUnitBusCommand command){
         UnitBus unitBus= UnitBus.builder()
                 .bus(command.bus())
                 .driver(command.driver())
@@ -124,6 +126,7 @@ public class TransportCompany {
                 .build();
 
         this.unitBuses.add(unitBus);
+        return unitBus;
     }
 
     public void modifyDriver(ModifyDriverCommand command){
@@ -191,7 +194,7 @@ public class TransportCompany {
 
     }
 
-    public void createNewSchedule(CreateScheduleCommand command) {
+    public Schedule createNewSchedule(CreateScheduleCommand command) {
         Schedule schedule= Schedule.builder()
                 .date(command.date())
                 .description(command.description())
@@ -201,6 +204,7 @@ public class TransportCompany {
                 .build();
 
         this.schedules.add(schedule);
+        return schedule;
     }
 
     public DepartureSchedule createNewDepartureSchedule(CreateDepartureScheduleCommand command) {

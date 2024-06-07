@@ -6,8 +6,8 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus
 public record DepartureScheduleCreatedResource(
         Long id,
         int roundNumber,
-        UnitBusDto unitBusDto,
-        ScheduleDto scheduleDto,
+        UnitBusDto unitBus,
+        ScheduleDto schedule,
         int user,
         boolean isDeleted
 ) {

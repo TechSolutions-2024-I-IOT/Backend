@@ -21,13 +21,13 @@ public interface TransportCompanyRepository extends JpaRepository<TransportCompa
     @Query("SELECT s FROM Schedule s JOIN s.transportCompany tc WHERE tc.user.id=:userId")
     Optional<Schedule> findScheduleByUserId(@Param("userId") int userId);
 
-    @Query("SELECT d FROM Driver d JOIN d.transportCompany tc WHERE tc.user.id = :userId")
+    @Query("SELECT d FROM Driver d JOIN d.transportCompany tc WHERE tc.user.id = :userId AND d.isDeleted = false")
     List<Driver> findDriversByUserId(@Param("userId") int userId);
 
-    @Query("SELECT b FROM Bus b JOIN b.transportCompany tc WHERE tc.user.id = :userId")
+    @Query("SELECT b FROM Bus b JOIN b.transportCompany tc WHERE tc.user.id = :userId AND b.isDeleted=false")
     List<Bus> findBusesByUserId(@Param("userId") int userId);
 
-    @Query("SELECT s FROM Schedule s JOIN s.transportCompany tc WHERE tc.user.id =:userId")
+    @Query("SELECT s FROM Schedule s JOIN s.transportCompany tc WHERE tc.user.id =:userId AND s.isDeleted=false")
     List<Schedule> findSchedulesByUserId(@Param("userId") int userId);
 
     @Query("SELECT d FROM Driver d WHERE d.id = :driverId AND d.transportCompany = :transportCompany")
@@ -36,7 +36,7 @@ public interface TransportCompanyRepository extends JpaRepository<TransportCompa
     @Query("SELECT b FROM Bus b WHERE b.id = :busId AND b.transportCompany = :transportCompany")
     Optional<Bus> findBusById(@Param("busId") int busId, @Param("transportCompany") TransportCompany transportCompany);
 
-    @Query("SELECT u FROM UnitBus u JOIN u.transportCompany tc WHERE tc.user.id=:userId")
+    @Query("SELECT u FROM UnitBus u JOIN u.transportCompany tc WHERE tc.user.id=:userId AND u.isDeleted=false")
     List<UnitBus> findUnitBusesByUserId(@Param("userId") int userId);
 
 
