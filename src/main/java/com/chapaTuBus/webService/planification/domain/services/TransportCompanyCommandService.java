@@ -11,6 +11,8 @@ import com.chapaTuBus.webService.planification.domain.model.commands.driver.Regi
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.AssignUnitBusCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.DeleteUnitBusCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.ModifyUnitBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.*;
 
 import java.util.Optional;
@@ -20,6 +22,8 @@ public interface TransportCompanyCommandService {
     Optional<TransportCompany> handle(CreateTransportCompanyCommand command);
     Optional<Bus> handle(RegisterBusCommand command);
     Optional<UnitBus> handle(AssignUnitBusCommand command);
+    Optional<UnitBus> handle(ModifyUnitBusCommand command);
+    //Optional<UnitBus> handle(DeleteUnitBusCommand command);
     Optional<Schedule>handle(CreateScheduleCommand command);
     Optional<DepartureSchedule>handle(CreateDepartureScheduleCommand command);
     Optional<Driver> handle(ModifyDriverCommand command);

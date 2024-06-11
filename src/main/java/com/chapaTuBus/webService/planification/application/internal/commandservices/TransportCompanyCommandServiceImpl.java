@@ -11,6 +11,8 @@ import com.chapaTuBus.webService.planification.domain.model.commands.driver.Regi
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.AssignUnitBusCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.DeleteUnitBusCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.ModifyUnitBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.*;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
@@ -100,6 +102,24 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
         }
     }
 
+    @Override
+    public Optional<UnitBus> handle(ModifyUnitBusCommand command){
+        Optional<TransportCompany> transportCompanyOpt = transportCompanyRepository.findByUserId((long) command.userId());
+        if (transportCompanyOpt.isEmpty()) return Optional.empty();
+
+        TransportCompany transportCompany = transportCompanyOpt.get();
+        //transportCompany.modifyUnitBus(command);
+        transportCompanyRepository.save(transportCompany);
+
+        return transportCompany.getUnitBuses().stream()
+                .filter(unitBus -> unitBus.getId().equals(command.unitBusId()))
+                .findFirst();
+    }
+
+    /*@Override
+    public Optional<UnitBus> handle(DeleteUnitBusCommand command){
+
+    }*/
 
     @Override
     public Optional<Schedule> handle(CreateScheduleCommand command) {
