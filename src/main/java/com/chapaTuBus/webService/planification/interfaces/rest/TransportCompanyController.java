@@ -18,6 +18,8 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.transpo
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CreateTransportCompanyResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.TransportCompanyCreatedResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.AssignUnitBusResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.ModifiedUnitBusResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.ModifyUnitBusResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.UnitBusCreatedResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.CreateDepartureScheduleCommandFromResourceAssembler;
@@ -30,6 +32,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.transform.transpo
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CreateTransportCompanyCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.TransportCompanyCreatedResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.AssignUnitBusCommandFromResourceAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.ModifyUnitBusCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.UnitBusCreatedResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.apache.coyote.Response;
@@ -276,6 +279,15 @@ public class TransportCompanyController {
                         ResponseEntity.ok(ModifiedBusResourceFromEntityAssembler.toResourceFromEntity(modifiedBus)))
                 .orElseGet(()->ResponseEntity.notFound().build());
 
+
+    }
+
+    @PutMapping("/unit-bus")
+    public ResponseEntity<ModifiedUnitBusResource> modifyUnitBusByUnitBusId(
+            @RequestParam("unitBusId") Long unitBusId,
+            @RequestParam("userId") int userId,
+            @RequestBody ModifyUnitBusResource resource){
+       // var modifyUnitBusCommand = ModifyUnitBusCommandFromResourceAssembler.toCommand()
 
     }
 

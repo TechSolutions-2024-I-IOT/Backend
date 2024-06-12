@@ -10,6 +10,7 @@ import com.chapaTuBus.webService.planification.domain.model.commands.driver.Regi
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.AssignUnitBusCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.ModifyUnitBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.*;
 import com.chapaTuBus.webService.planification.domain.model.valueobjects.BusStates;
 import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
@@ -146,6 +147,30 @@ public class TransportCompany {
         driver.setPhoneNumber(command.phoneNumber());
         driver.setPhotoUrl(command.photoUrl());
 
+    }
+
+    public void modifyUnitBus(ModifyUnitBusCommand command){
+        Optional<UnitBus> selectedUnitBus = this.getUnitBuses().stream()
+                .filter(unitBus -> command.unitBusId().equals(unitBus.getId()))
+                .findFirst();
+        if (selectedUnitBus.isEmpty()) return;
+
+        Optional<Bus> selectedBus = this.getBuses().stream()
+                .filter(bus -> command.busID().equals(bus.getId()))
+                .findFirst();
+        if(selectedBus.isEmpty()) return;
+
+        Optional<Driver> selectedDriver = this.getDrivers().stream()
+                .filter(driver -> command.driverId().equals(driver.getId()))
+                .findFirst();
+        if(selectedDriver.isEmpty()) return;
+
+        Bus bus = selectedBus.get();
+        Driver driver = selectedDriver.get();
+
+        UnitBus unitBus = selectedUnitBus.get();
+        unitBus.setBus(bus);
+        unitBus.setDriver(driver);
     }
 
     public void deleteDriver(DeleteDriverCommand command){

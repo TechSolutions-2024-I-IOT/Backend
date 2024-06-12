@@ -108,7 +108,7 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
         if (transportCompanyOpt.isEmpty()) return Optional.empty();
 
         TransportCompany transportCompany = transportCompanyOpt.get();
-        //transportCompany.modifyUnitBus(command);
+        transportCompany.modifyUnitBus(command);
         transportCompanyRepository.save(transportCompany);
 
         return transportCompany.getUnitBuses().stream()
