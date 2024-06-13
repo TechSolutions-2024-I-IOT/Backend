@@ -63,7 +63,7 @@ public class AllTransportCompanyInformationResourceFromEntityAssembler {
                             .filter(departureSchedule -> !departureSchedule.isDeleted())
                             .map(actualDepartureSchedule -> new DepartureScheduleDto(
                                     actualDepartureSchedule.getId(),
-                                    actualDepartureSchedule.getDepartureTime().format(timeFormatter),
+                                    actualDepartureSchedule.getDepartureTimes(),
                                     actualDepartureSchedule.getRoundNumber(),
                                     new UnitBusDto(
                                             actualDepartureSchedule.getUnitBus().getId(),

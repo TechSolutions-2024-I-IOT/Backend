@@ -17,7 +17,8 @@ public class DepartureSchedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalTime departureTime;
+    @OneToMany(mappedBy = "departureSchedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DepartureTime> departureTimes;
 
     private int roundNumber;
 
