@@ -5,12 +5,12 @@ import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.Mod
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.ModifyUnitBusResource;
 
 public class ModifyUnitBusCommandFromResourceAssembler {
-    public static ModifyUnitBusCommand toCommand(Long unitBusId, int userId, ModifyUnitBusResource resource){
+    public static ModifyUnitBusCommand toCommand( int userId, Long unitBusId, ModifyUnitBusResource resource){
         return new ModifyUnitBusCommand(
-                unitBusId,
                 userId,
-                resource.driverId,
-                resource.busId
+                unitBusId,
+                resource.driverId(),
+                resource.busId()
         );
     }
 }

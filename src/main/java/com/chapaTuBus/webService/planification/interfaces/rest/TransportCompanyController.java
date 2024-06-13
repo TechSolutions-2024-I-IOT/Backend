@@ -32,6 +32,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.transform.transpo
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CreateTransportCompanyCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.TransportCompanyCreatedResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.AssignUnitBusCommandFromResourceAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.ModifiedUnitBusResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.ModifyUnitBusCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.UnitBusCreatedResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -287,8 +288,10 @@ public class TransportCompanyController {
             @RequestParam("unitBusId") Long unitBusId,
             @RequestParam("userId") int userId,
             @RequestBody ModifyUnitBusResource resource){
-       // var modifyUnitBusCommand = ModifyUnitBusCommandFromResourceAssembler.toCommand()
-
+       var modifyUnitBusCommand = ModifyUnitBusCommandFromResourceAssembler.toCommand(userId, unitBusId, resource);
+       var unitBus = transportCompanyCommandService.handle(modifyUnitBusCommand);
+       return unitBus.map(modifiedUnitBus -> ResponseEntity.ok(ModifiedUnitBusResourceFromEntityAssembler.toResourceFromEntity(modifiedUnitBus)))
+               .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PatchMapping("/driver/delete")

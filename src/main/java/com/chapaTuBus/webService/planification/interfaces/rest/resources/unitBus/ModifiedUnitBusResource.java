@@ -1,8 +1,13 @@
 package com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus;
 
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.dto.BusDto;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.dto.DriverDto;
+
 public record ModifiedUnitBusResource (
-        int userId,
-        Long driverId,
-        Long busId
+        Long id,
+        DriverDto driver,
+        BusDto bus,
+        int user,
+        boolean isDeleted
 ){
 }

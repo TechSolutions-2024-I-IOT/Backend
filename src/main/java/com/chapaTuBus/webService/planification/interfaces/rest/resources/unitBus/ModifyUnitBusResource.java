@@ -1,4 +1,7 @@
 package com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus;
 
-public class ModifyUnitBusResource {
+public record ModifyUnitBusResource (
+        Long driverId,
+        Long busId
+){
 }
