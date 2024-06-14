@@ -3,6 +3,7 @@ package com.chapaTuBus.webService.planification.interfaces.rest;
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.DeleteDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.DeleteUnitBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.*;
 import com.chapaTuBus.webService.planification.domain.model.queries.*;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
@@ -17,10 +18,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.transpo
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CompleteTransportCompanyInformationResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CreateTransportCompanyResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.TransportCompanyCreatedResource;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.AssignUnitBusResource;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.ModifiedUnitBusResource;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.ModifyUnitBusResource;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.UnitBusCreatedResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.CreateDepartureScheduleCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.DepartureScheduleCreatedResourceFromEntityAssembler;
@@ -31,10 +29,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.transform.transpo
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CompleteTransportCompanyInformationResoruceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CreateTransportCompanyCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.TransportCompanyCreatedResourceFromEntityAssembler;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.AssignUnitBusCommandFromResourceAssembler;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.ModifiedUnitBusResourceFromEntityAssembler;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.ModifyUnitBusCommandFromResourceAssembler;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.UnitBusCreatedResourceFromEntityAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
@@ -320,4 +315,13 @@ public class TransportCompanyController {
 
     }
 
+    @PatchMapping("/unit-bus/delete")
+    public ResponseEntity<String> softDeleteUnitBus(@RequestBody SoftDeleteUnitBusResource resource){
+        var deleteUnitBusCommand = DeleteUnitBusCommandFromResourceAssembler.toCommand(resource);
+        var unitBusOpt = transportCompanyCommandService.handle(deleteUnitBusCommand);
+        return unitBusOpt.map(unitBus -> {
+            String message = "La unidad de bus de id: " + unitBus.getId() + " ha sido eliminado correctamente";
+            return ResponseEntity.ok(message);
+        }).orElseGet(() -> ResponseEntity.badRequest().build());
+    }
 }

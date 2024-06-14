@@ -116,10 +116,21 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
                 .findFirst();
     }
 
-    /*@Override
+    @Override
     public Optional<UnitBus> handle(DeleteUnitBusCommand command){
+        Optional<UnitBus> unitBus = transportCompanyRepository.findUnitBusById(Math.toIntExact(command.unitBusId()));
+        if(unitBus.isEmpty()) return Optional.empty();
 
-    }*/
+        Optional<TransportCompany> transportCompanyOpt = transportCompanyRepository.findByUserId((long) unitBus.get().getUser());
+        if(transportCompanyOpt.isEmpty()) return Optional.empty();
+
+        TransportCompany transportCompany = transportCompanyOpt.get();
+        transportCompany.deleteUnitBus(command);
+        transportCompanyRepository.save(transportCompany);
+        return transportCompany.getUnitBuses().stream()
+                .filter(actualUnitBus -> actualUnitBus.getId().equals(command.unitBusId()))
+                .findFirst();
+    }
 
     @Override
     public Optional<Schedule> handle(CreateScheduleCommand command) {

@@ -23,7 +23,7 @@ public interface TransportCompanyCommandService {
     Optional<Bus> handle(RegisterBusCommand command);
     Optional<UnitBus> handle(AssignUnitBusCommand command);
     Optional<UnitBus> handle(ModifyUnitBusCommand command);
-    //Optional<UnitBus> handle(DeleteUnitBusCommand command);
+    Optional<UnitBus> handle(DeleteUnitBusCommand command);
     Optional<Schedule>handle(CreateScheduleCommand command);
     Optional<DepartureSchedule>handle(CreateDepartureScheduleCommand command);
     Optional<Driver> handle(ModifyDriverCommand command);

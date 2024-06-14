@@ -10,6 +10,7 @@ import com.chapaTuBus.webService.planification.domain.model.commands.driver.Regi
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.AssignUnitBusCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.DeleteUnitBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.ModifyUnitBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.*;
 import com.chapaTuBus.webService.planification.domain.model.valueobjects.BusStates;
@@ -199,6 +200,15 @@ public class TransportCompany {
         bus.setDeleted(true);
 
 
+    }
+
+    public void deleteUnitBus(DeleteUnitBusCommand command){
+        Optional<UnitBus> selectedUnitBus = this.getUnitBuses().stream()
+                .filter(unitBus -> command.unitBusId().equals(unitBus.getId()))
+                .findFirst();
+        if(selectedUnitBus.isEmpty()) return;
+        UnitBus unitBus = selectedUnitBus.get();
+        unitBus.setDeleted(true);
     }
 
     public void modifyBus(ModifyBusCommand command){
