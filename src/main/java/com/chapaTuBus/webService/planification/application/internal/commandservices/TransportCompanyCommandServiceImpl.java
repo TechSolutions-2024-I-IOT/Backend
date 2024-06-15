@@ -186,12 +186,13 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
         TransportCompany transportCompany = transportCompanyOpt.get();
         List<DepartureSchedule> departureSchedules = new ArrayList<>();
 
-        Schedule newSchedule = new Schedule();
-        newSchedule.setDate(command.date());
-        newSchedule.setDescription(command.description());
-        newSchedule.setUser(command.user());
-        newSchedule.setTransportCompany(transportCompany);
-        newSchedule.setDepartureSchedules(departureSchedules);  // Asegurar la relación bi-direccional aquí
+        Schedule newSchedule= Schedule.builder()
+                .date(command.date())
+                .description(command.description())
+                .user(command.user())
+                .transportCompany(transportCompany)
+                .departureSchedules(departureSchedules)
+                .build();
 
         for (DepartureScheduleCommand dsCommand : command.departureSchedules()) {
             Optional<UnitBus> unitBusOpt = transportCompanyRepository.findUnitBusById(dsCommand.unitBusId(), transportCompany);

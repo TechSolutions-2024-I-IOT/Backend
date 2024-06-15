@@ -27,8 +27,8 @@ public class DepartureSchedule {
     private Schedule schedule;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bus_unit_id")
+    @ManyToOne
+    @JoinColumn(name = "bus_unit_id",nullable = false)
     private UnitBus unitBus;
 
     private int user;

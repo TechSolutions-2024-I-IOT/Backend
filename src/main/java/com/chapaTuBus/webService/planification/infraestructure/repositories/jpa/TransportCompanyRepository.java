@@ -42,6 +42,7 @@ public interface TransportCompanyRepository extends JpaRepository<TransportCompa
     @Query("SELECT u FROM UnitBus u WHERE u.id = :unitBusId AND u.transportCompany= :transportCompany")
     Optional<UnitBus> findUnitBusById(@Param("unitBusId") Long unitBusId, @Param("transportCompany") TransportCompany transportCompany);
 
+
     @Query("SELECT ds FROM DepartureSchedule ds " +
             "JOIN ds.schedule s " +
             "JOIN s.transportCompany tc " +
