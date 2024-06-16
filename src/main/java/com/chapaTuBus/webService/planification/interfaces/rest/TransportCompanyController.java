@@ -1,9 +1,7 @@
 package com.chapaTuBus.webService.planification.interfaces.rest;
 
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
-import com.chapaTuBus.webService.planification.domain.model.commands.driver.DeleteDriverCommand;
-import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
-import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.DeleteUnitBusCommand;
+
 import com.chapaTuBus.webService.planification.domain.model.entities.*;
 import com.chapaTuBus.webService.planification.domain.model.queries.*;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
@@ -12,8 +10,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.departureSchedule.CreateDepartureScheduleResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.departureSchedule.DepartureScheduleCreatedResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.*;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.CreateScheduleResource;
-import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.ScheduleCreatedResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.AllTransportCompanyInformationResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CompleteTransportCompanyInformationResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CreateTransportCompanyResource;
@@ -23,18 +20,19 @@ import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.CreateDepartureScheduleCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.DepartureScheduleCreatedResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.*;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.schedule.CreateScheduleCommandFromResourceAssembler;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.schedule.ScheduleCreatedResourceFromEntityAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.schedule.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.AllTransportCompanyInformationResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CompleteTransportCompanyInformationResoruceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CreateTransportCompanyCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.TransportCompanyCreatedResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.unitBus.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,6 +93,20 @@ public class TransportCompanyController {
         return driverResource.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
     }
+
+    @GetMapping("/scheduleById")
+    ResponseEntity<ScheduleWithDepartureSchedulesCompleteInformationResource> getScheduleById(@RequestParam("scheduleId") int scheduleId){
+
+        var getScheduleCompleteInformationByScheduleIdQuery= new GetScheduleCompleteInformationByScheduleIdQuery(scheduleId);
+
+        var schedule= transportCompanyQueryService.handle(getScheduleCompleteInformationByScheduleIdQuery);
+
+        var scheduleResource= schedule.map(ScheduleWithDepartureSchedulesCompleteInformationResourceFromEntityAssembler::toResourceFromEntity);
+
+        return scheduleResource.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+
+    }
+
 
     @GetMapping("/drivers")
     ResponseEntity<List<DriverRegisteredResource>> getDrivers(@RequestParam(name = "userId") int userId) {
@@ -183,6 +195,26 @@ public class TransportCompanyController {
                         new ResponseEntity<>(TransportCompanyCreatedResourceFromEntityAssembler.toResourceFromEntity(actualTransportCompany),CREATED))
                 .orElseGet(()->ResponseEntity.badRequest().build());
 
+    }
+
+    @PostMapping("/new-schedule-with-departures")
+    public ResponseEntity<?> createScheduleAndDepartureSchedules(@RequestBody CreateScheduleAndDepartureSchedulesResource resource) {
+        try {
+            Optional<Schedule> schedule = transportCompanyCommandService.handle(
+                    CreateScheduleWithDepartureSchedulesCommandFromResourceAssembler.toCommand(resource)
+            );
+
+            if (schedule.isPresent()) {
+                ScheduleWithDepartureShedulesCreated response = ScheduleWithDepartureSchedulesCreatedResourceFromEntityAssembler.toResourceFromEntity(schedule.get());
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create the schedule, check the provided data.");
+            }
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body("Failed to parse date or time: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("An error occurred: " + e.getMessage());
+        }
     }
 
     @PostMapping("/register-driver")

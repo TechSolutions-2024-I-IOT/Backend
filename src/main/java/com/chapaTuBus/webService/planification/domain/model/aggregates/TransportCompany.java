@@ -8,6 +8,7 @@ import com.chapaTuBus.webService.planification.domain.model.commands.driver.Dele
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.ModifyDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleWithDepartureSchedulesCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.AssignUnitBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.DeleteUnitBusCommand;
@@ -129,6 +130,18 @@ public class TransportCompany {
 
         this.unitBuses.add(unitBus);
         return unitBus;
+    }
+    public Schedule createNewScheduleWithDepartureSchedules(CreateScheduleWithDepartureSchedulesCommand command,List<DepartureSchedule> departureSchedules){
+        Schedule schedule= Schedule.builder()
+                .date(command.date())
+                .description(command.description())
+                .departureSchedules(departureSchedules)
+                .user(command.user())
+                .transportCompany(this)
+                .build();
+
+        this.schedules.add(schedule);
+        return schedule;
     }
 
     public void modifyDriver(ModifyDriverCommand command){
@@ -258,7 +271,7 @@ public class TransportCompany {
                 UnitBus unitBus = optionalUnitBus.get();
 
                 DepartureSchedule departureSchedule = DepartureSchedule.builder()
-                        .departureTime(command.time())
+                        //.departureTime(command.time())
                         .roundNumber(command.roundNumber())
                         .schedule(schedule)
                         .unitBus(unitBus)

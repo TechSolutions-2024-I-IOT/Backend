@@ -17,7 +17,8 @@ public class DepartureSchedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalTime departureTime;
+    @OneToMany(mappedBy = "departureSchedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DepartureTime> departureTimes;
 
     private int roundNumber;
 
@@ -26,8 +27,8 @@ public class DepartureSchedule {
     private Schedule schedule;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bus_unit_id")
+    @ManyToOne
+    @JoinColumn(name = "bus_unit_id",nullable = false)
     private UnitBus unitBus;
 
     private int user;

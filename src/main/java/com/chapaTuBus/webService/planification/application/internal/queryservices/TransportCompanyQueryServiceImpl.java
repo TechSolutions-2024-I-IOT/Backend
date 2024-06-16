@@ -66,4 +66,9 @@ public class TransportCompanyQueryServiceImpl implements TransportCompanyQuerySe
     public Optional<TransportCompany> handle(GetTransportCompanyInformationByIdQuery query) {
         return transportCompanyRepository.findById(query.transportCompanyId());
     }
+
+    @Override
+    public Optional<Schedule> handle(GetScheduleCompleteInformationByScheduleIdQuery query) {
+        return transportCompanyRepository.findScheduleById(query.ScheduleId());
+    }
 }

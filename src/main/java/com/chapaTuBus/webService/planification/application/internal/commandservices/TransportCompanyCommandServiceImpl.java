@@ -9,6 +9,8 @@ import com.chapaTuBus.webService.planification.domain.model.commands.driver.Dele
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.ModifyDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleWithDepartureSchedulesCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.schedule.DepartureScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.AssignUnitBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.DeleteUnitBusCommand;
@@ -21,8 +23,11 @@ import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.Us
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TransportCompanyCommandServiceImpl implements TransportCompanyCommandService {
@@ -198,6 +203,55 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
     }
 
     @Override
+    public Optional<Schedule> handle(CreateScheduleWithDepartureSchedulesCommand command) {
+        Optional<User> userOpt = userRepository.findById((long) command.user());
+        if (userOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Optional<TransportCompany> transportCompanyOpt = transportCompanyRepository.findById(userOpt.get().getTransportCompany().getId());
+        if (!transportCompanyOpt.isPresent()) {
+            return Optional.empty();
+        }
+
+        TransportCompany transportCompany = transportCompanyOpt.get();
+        List<DepartureSchedule> departureSchedules = new ArrayList<>();
+
+        Schedule newSchedule= Schedule.builder()
+                .date(command.date())
+                .description(command.description())
+                .user(command.user())
+                .transportCompany(transportCompany)
+                .departureSchedules(departureSchedules)
+                .build();
+
+        for (DepartureScheduleCommand dsCommand : command.departureSchedules()) {
+            Optional<UnitBus> unitBusOpt = transportCompanyRepository.findUnitBusById(dsCommand.unitBusId(), transportCompany);
+            if (!unitBusOpt.isPresent()) {
+                throw new RuntimeException("UnitBus not found for ID: " + dsCommand.unitBusId());
+            }
+
+            DepartureSchedule departureSchedule = new DepartureSchedule();
+            departureSchedule.setUnitBus(unitBusOpt.get());
+            departureSchedule.setUser(dsCommand.userId());
+            departureSchedule.setRoundNumber(dsCommand.roundNumber());
+            departureSchedule.setSchedule(newSchedule); // Establece el schedule aquí
+
+            List<DepartureTime> departureTimes = dsCommand.times().stream()
+                    .map(time -> DepartureTime.builder().time(time).departureSchedule(departureSchedule).build())
+                    .collect(Collectors.toList());
+            departureSchedule.setDepartureTimes(departureTimes);
+            departureSchedules.add(departureSchedule);
+        }
+
+        transportCompany.getSchedules().add(newSchedule);  // Asegúrate de añadir el nuevo schedule a la lista del transportCompany
+        transportCompanyRepository.save(transportCompany);  // Guardamos el TransportCompany que cascada los cambios a Schedules y DepartureSchedules
+        return Optional.of(newSchedule);
+    }
+
+
+
+    @Override
     public Optional<Driver> handle(ModifyDriverCommand command) {
         Optional<TransportCompany> transportCompanyOpt = transportCompanyRepository.findByUserId((long) command.userId());
         if (transportCompanyOpt.isEmpty()) return Optional.empty();
@@ -272,6 +326,7 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
                 .filter(actualBus->actualBus.getId().equals(command.busId()))
                 .findFirst();
     }
+
 
 
 }
