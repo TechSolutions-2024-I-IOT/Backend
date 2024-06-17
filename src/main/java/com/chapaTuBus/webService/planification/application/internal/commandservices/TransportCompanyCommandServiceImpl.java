@@ -226,7 +226,7 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
                 .build();
 
         for (DepartureScheduleCommand dsCommand : command.departureSchedules()) {
-            Optional<UnitBus> unitBusOpt = transportCompanyRepository.findUnitBusById(dsCommand.unitBusId(), transportCompany);
+            Optional<UnitBus> unitBusOpt = transportCompanyRepository.findUnitBusById2(dsCommand.unitBusId(), transportCompany);
             if (!unitBusOpt.isPresent()) {
                 throw new RuntimeException("UnitBus not found for ID: " + dsCommand.unitBusId());
             }
