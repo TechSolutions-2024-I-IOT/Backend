@@ -1,6 +1,7 @@
 package com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany;
 
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.DTO.DepartureScheduleWithUnitBusInformationDto;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.AllTransportCompanyInformationResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.DTO.*;
 
@@ -56,34 +57,30 @@ public class AllTransportCompanyInformationResourceFromEntityAssembler {
 
         List<ScheduleDto> schedules = entity.getSchedules().stream()
                 .filter(schedule -> !schedule.isDeleted())
-                .map(actualSchedule -> {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss"); // Formato 24 horas
-                    List<DepartureScheduleDto> departureScheduleDtos = actualSchedule.getDepartureSchedules().stream()
-                            .filter(departureSchedule -> !departureSchedule.isDeleted())
-                            .map(actualDepartureSchedule -> new DepartureScheduleDto(
-                                    actualDepartureSchedule.getId(),
-                                    actualDepartureSchedule.getDepartureTimes(),
-                                    actualDepartureSchedule.getRoundNumber(),
-                                    new UnitBusDto(
-                                            actualDepartureSchedule.getUnitBus().getId(),
-                                            new DriverForUnitBusDto(
-                                                    actualDepartureSchedule.getUnitBus().getDriver().getId(),
-                                                    actualDepartureSchedule.getUnitBus().getDriver().getFirstName(),
-                                                    actualDepartureSchedule.getUnitBus().getDriver().getLastName()),
-                                            new BusForUnitBusDto(
-                                                    actualDepartureSchedule.getUnitBus().getBus().getId(),
-                                                    actualDepartureSchedule.getUnitBus().getBus().getLicensePlate())),
-                                    actualDepartureSchedule.isDeleted()))
-                            .collect(Collectors.toList());
-
-                    return new ScheduleDto(
-                            actualSchedule.getId(),
-                            actualSchedule.getDate().format(formatter),
-                            actualSchedule.getDescription(),
-                            departureScheduleDtos,
-                            actualSchedule.isDeleted());
-                })
+                .map(actualSchedule -> new ScheduleDto(
+                        actualSchedule.getId(),
+                        actualSchedule.getDate().format(DateTimeFormatter.ISO_DATE),
+                        actualSchedule.getDescription(),
+                        actualSchedule.getDepartureSchedules().stream()
+                                .filter(departureSchedule -> !departureSchedule.isDeleted())
+                                .map(departureSchedule -> new DepartureScheduleWithUnitBusInformationDto(
+                                        departureSchedule.getDepartureTimes().stream()
+                                                .map(departureTime -> departureTime.getTime().toString())
+                                                .collect(Collectors.toList()),
+                                        departureSchedule.getRoundNumber(),
+                                        new com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.DTO.UnitBusDto(
+                                                Math.toIntExact(departureSchedule.getUnitBus().getId()),
+                                                new com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.dto.DriverDto(
+                                                        departureSchedule.getUnitBus().getDriver().getId(),
+                                                        departureSchedule.getUnitBus().getDriver().getFirstName(),
+                                                        departureSchedule.getUnitBus().getDriver().getLastName()),
+                                                new com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus.dto.BusDto(
+                                                        departureSchedule.getUnitBus().getBus().getId(),
+                                                        departureSchedule.getUnitBus().getBus().getLicensePlate())
+                                        )
+                                )).collect(Collectors.toList()),
+                        actualSchedule.getUser(),
+                        actualSchedule.isDeleted()))
                 .collect(Collectors.toList());
 
         return new AllTransportCompanyInformationResource(

@@ -1,6 +1,7 @@
 package com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany;
 
 import com.chapaTuBus.webService.planification.domain.model.entities.Bus;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.ScheduleWithDepartureSchedulesCompleteInformationResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.DTO.*;
 
 import java.util.List;
