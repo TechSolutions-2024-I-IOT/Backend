@@ -1,5 +1,6 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
+import com.chapaTuBus.webService.monitoringAndExecution.domain.model.aggregates.GpsTracker;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,7 +19,6 @@ public class Itinerary {
     private String destiny;
 
     private double total_distance;
-
 
     @OneToMany(mappedBy = "itinerary",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Stop>stops;

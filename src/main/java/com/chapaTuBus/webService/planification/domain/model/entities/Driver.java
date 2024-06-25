@@ -1,5 +1,7 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
+import com.chapaTuBus.webService.monitoringAndExecution.domain.model.aggregates.GpsTracker;
+import com.chapaTuBus.webService.monitoringAndExecution.domain.model.aggregates.SmartBand;
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,6 +33,10 @@ public class Driver {
     private String email;
 
     private int user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "smart_band_id")
+    private SmartBand smartBand;
 
     @ManyToOne
     @JoinColumn(name = "transport_company_id")

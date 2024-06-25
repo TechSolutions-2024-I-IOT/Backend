@@ -43,6 +43,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/api/v1/sensor-data",
                                 "api/v1/location-data",
+                                "/api/v1/smart-band/**"
                                 "api/v1/transport-company/completeInformationById",
                                 "/api/v1/payment"
                         ).permitAll()
