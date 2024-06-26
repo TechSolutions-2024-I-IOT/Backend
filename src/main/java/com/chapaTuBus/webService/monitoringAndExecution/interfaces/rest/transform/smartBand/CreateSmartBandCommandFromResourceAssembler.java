@@ -1,7 +1,7 @@
-package com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform;
+package com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.smartBand;
 
 import com.chapaTuBus.webService.monitoringAndExecution.domain.model.commands.CreateSmartBandCommand;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.CreateSmartBandResource;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.smartBand.CreateSmartBandResource;
 
 public class CreateSmartBandCommandFromResourceAssembler {
     public static CreateSmartBandCommand toCommand (CreateSmartBandResource resource){

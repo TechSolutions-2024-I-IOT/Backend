@@ -1,5 +1,6 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
+import com.chapaTuBus.webService.monitoringAndExecution.domain.model.aggregates.GpsTracker;
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,6 +40,8 @@ public class UnitBus {
     @Column(nullable = false,columnDefinition = "boolean default false")
     private boolean isDeleted;
 
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "gps_tracker_id")
+    private GpsTracker gpsTracker;
 
 }

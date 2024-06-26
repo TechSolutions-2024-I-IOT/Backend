@@ -1,7 +1,7 @@
-package com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform;
+package com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.smartBand;
 
 import com.chapaTuBus.webService.monitoringAndExecution.domain.model.commands.RegisterHeartRateLogCommand;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.RegisterHeartRateLogResource;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.smartBand.RegisterHeartRateLogResource;
 
 public class RegisterHeartRateLogCommandFromResourceAssembler {
 

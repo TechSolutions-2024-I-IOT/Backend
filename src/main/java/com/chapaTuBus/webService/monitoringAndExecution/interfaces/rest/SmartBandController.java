@@ -6,15 +6,14 @@ import com.chapaTuBus.webService.monitoringAndExecution.domain.model.entities.He
 import com.chapaTuBus.webService.monitoringAndExecution.domain.model.queries.GetAllHeartRateLogsBySmartBandIdQuery;
 import com.chapaTuBus.webService.monitoringAndExecution.domain.services.SmartBandCommandService;
 import com.chapaTuBus.webService.monitoringAndExecution.domain.services.SmartBandQueryService;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.CreateSmartBandResource;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.HeartRateLogCreatedResource;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.RegisterHeartRateLogResource;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.SmartBandCreatedResource;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.CreateSmartBandCommandFromResourceAssembler;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.HeartRateLogCreatedResourceFromEntityAssembler;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.RegisterHeartRateLogCommandFromResourceAssembler;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.SmartBandCreatedResourceFromEntityAssembler;
-import org.apache.coyote.Response;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.smartBand.CreateSmartBandResource;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.smartBand.HeartRateLogCreatedResource;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.smartBand.RegisterHeartRateLogResource;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.smartBand.SmartBandCreatedResource;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.smartBand.CreateSmartBandCommandFromResourceAssembler;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.smartBand.HeartRateLogCreatedResourceFromEntityAssembler;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.smartBand.RegisterHeartRateLogCommandFromResourceAssembler;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.smartBand.SmartBandCreatedResourceFromEntityAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

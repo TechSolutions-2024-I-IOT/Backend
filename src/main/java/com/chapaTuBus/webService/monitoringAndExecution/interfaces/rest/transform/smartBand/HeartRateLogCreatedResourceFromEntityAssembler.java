@@ -1,7 +1,7 @@
-package com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform;
+package com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.smartBand;
 
 import com.chapaTuBus.webService.monitoringAndExecution.domain.model.entities.HeartRateLog;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.HeartRateLogCreatedResource;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.smartBand.HeartRateLogCreatedResource;
 
 import java.time.format.DateTimeFormatter;
 
