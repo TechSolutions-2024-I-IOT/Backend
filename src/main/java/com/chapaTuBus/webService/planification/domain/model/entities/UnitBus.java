@@ -1,5 +1,6 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
+import com.chapaTuBus.webService.monitoringAndExecution.domain.model.aggregates.WeightSensor;
 import com.chapaTuBus.webService.monitoringAndExecution.domain.model.aggregates.GpsTracker;
 import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import jakarta.persistence.*;
@@ -36,6 +37,10 @@ public class UnitBus {
     private TransportCompany transportCompany;
 
     private int user;
+
+    @ManyToOne
+    @JoinColumn(name= "weight_sensor_id")
+    private WeightSensor weightSensor;
 
     @Column(nullable = false,columnDefinition = "boolean default false")
     private boolean isDeleted;
