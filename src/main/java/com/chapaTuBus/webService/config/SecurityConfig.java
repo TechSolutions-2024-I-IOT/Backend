@@ -45,6 +45,7 @@ public class SecurityConfig {
                                 "api/v1/location-data",
                                 "/api/v1/smart-band/**",
                                 "api/v1/weight-sensor/**",
+                                "/api/v1/gps-tracker/**",
                                 "api/v1/transport-company/completeInformationById",
                                 "/api/v1/payment"
                         ).permitAll()

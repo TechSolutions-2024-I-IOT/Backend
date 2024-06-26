@@ -33,7 +33,6 @@ public class SmartBand {
 
     private String model;
 
-
     private int driverId;
 
     public SmartBand(){

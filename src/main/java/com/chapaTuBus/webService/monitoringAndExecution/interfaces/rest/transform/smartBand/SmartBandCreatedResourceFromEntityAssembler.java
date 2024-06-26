@@ -1,7 +1,7 @@
-package com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform;
+package com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.transform.smartBand;
 
 import com.chapaTuBus.webService.monitoringAndExecution.domain.model.aggregates.SmartBand;
-import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.SmartBandCreatedResource;
+import com.chapaTuBus.webService.monitoringAndExecution.interfaces.rest.resources.smartBand.SmartBandCreatedResource;
 
 public class SmartBandCreatedResourceFromEntityAssembler {
     public static SmartBandCreatedResource toResourceFromEntity (SmartBand entity){
