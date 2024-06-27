@@ -51,7 +51,10 @@ public class TransportCompanyQueryServiceImpl implements TransportCompanyQuerySe
     public List<TransportCompany> handle(GetAllTransportCompaniesQuery query) {
         return transportCompanyRepository.findAll();
     }
-
+    @Override
+    public Optional<TransportCompany> handle(GetTransportCompanyByUserIdQuery query){
+        return transportCompanyRepository.findByUserId(query.userId());
+    }
     @Override
     public Optional<Driver> handle(GetDriverByIdQuery query) {
         return transportCompanyRepository.findDriverById(query.driverId());
