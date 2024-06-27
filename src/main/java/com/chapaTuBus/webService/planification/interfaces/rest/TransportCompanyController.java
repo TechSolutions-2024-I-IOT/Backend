@@ -68,6 +68,14 @@ public class TransportCompanyController {
 
     }
 
+    @GetMapping("/byUserId")
+    ResponseEntity<CompleteTransportCompanyInformationResource> getTransportCompanyByUserId(@RequestParam("userId") Long userId) {
+        var getTransportCompanyByUserIdQuery = new GetTransportCompanyByUserIdQuery(userId);
+        var transportCompany = transportCompanyQueryService.handle(getTransportCompanyByUserIdQuery);
+        var transportCompanyResource = transportCompany.map(CompleteTransportCompanyInformationResoruceFromEntityAssembler::toResourceFromEntity);
+        return transportCompanyResource.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/completeInformationById")
     ResponseEntity<AllTransportCompanyInformationResource>getAllTransportCompanyInformation(@RequestParam("transportCompanyId") Long transportCompanyId){
 
