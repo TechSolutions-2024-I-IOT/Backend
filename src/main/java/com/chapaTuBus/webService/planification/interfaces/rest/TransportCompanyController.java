@@ -117,14 +117,14 @@ public class TransportCompanyController {
 
 
     @GetMapping("/drivers")
-    ResponseEntity<List<DriverRegisteredResource>> getDrivers(@RequestParam(name = "userId") int userId) {
+    ResponseEntity<List<DriverInformationResource>> getDrivers(@RequestParam(name = "userId") int userId) {
 
         var getAllDriversByUserIdQuery = new GetAllDriversByUserIdQuery(userId);
 
         var drivers = transportCompanyQueryService.handle(getAllDriversByUserIdQuery);
 
         var driversRegisteredResources = drivers.stream()
-                .map(DriverResourceFromEntityAssembler::toResourceFromEntity)
+                .map(DriverInformationResourceFromEntityAssembler::toResourceFromEntity)
                 .toList();
 
         return ResponseEntity.ok(driversRegisteredResources);
