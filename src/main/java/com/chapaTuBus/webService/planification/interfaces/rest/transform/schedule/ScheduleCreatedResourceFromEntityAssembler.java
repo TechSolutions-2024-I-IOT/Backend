@@ -11,6 +11,11 @@ public class ScheduleCreatedResourceFromEntityAssembler {
 
         DateTimeFormatter formatter= DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        return new ScheduleCreatedResource(schedule.getId(),schedule.getDate().format(formatter),schedule.getDescription(),schedule.getUser(), schedule.isDeleted());
+        return new ScheduleCreatedResource(
+                schedule.getId(),
+                schedule.getDate().format(formatter),
+                schedule.getDescription(),
+                schedule.getUser(),
+                schedule.isDeleted());
     }
 }

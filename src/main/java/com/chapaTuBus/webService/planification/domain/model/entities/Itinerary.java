@@ -1,27 +1,37 @@
 package com.chapaTuBus.webService.planification.domain.model.entities;
 
 import com.chapaTuBus.webService.monitoringAndExecution.domain.model.aggregates.GpsTracker;
+import com.chapaTuBus.webService.planification.domain.model.aggregates.TransportCompany;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
+import java.time.LocalTime;
 import java.util.List;
 
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Data
 public class Itinerary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String origin;
+    private LocalTime startTime;
 
-    private String destiny;
-
-    private double total_distance;
+    private LocalTime endTime;
 
     @OneToMany(mappedBy = "itinerary",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Stop>stops;
+    private List<Stop> stops;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "transport_company_id",referencedColumnName = "id")
+    private TransportCompany transportCompany;
+
+    private int user;
 
     @Column(nullable = false,columnDefinition = "boolean default false")
     private boolean isDeleted;

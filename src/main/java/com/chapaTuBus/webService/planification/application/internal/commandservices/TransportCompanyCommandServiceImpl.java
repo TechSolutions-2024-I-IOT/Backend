@@ -8,6 +8,8 @@ import com.chapaTuBus.webService.planification.domain.model.commands.departureSc
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.DeleteDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.ModifyDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.itinerary.CreateItineraryWithStopsCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.itinerary.StopCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleWithDepartureSchedulesCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.DepartureScheduleCommand;
@@ -17,6 +19,7 @@ import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.Del
 import com.chapaTuBus.webService.planification.domain.model.commands.unitBus.ModifyUnitBusCommand;
 import com.chapaTuBus.webService.planification.domain.model.entities.*;
 import com.chapaTuBus.webService.planification.domain.services.TransportCompanyCommandService;
+import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.ItineraryRepository;
 import com.chapaTuBus.webService.planification.infraestructure.repositories.jpa.TransportCompanyRepository;
 import com.chapaTuBus.webService.userAccount.domain.model.aggregates.User;
 import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.UserRepository;
@@ -34,12 +37,15 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
 
     private final TransportCompanyRepository transportCompanyRepository;
     private final UserRepository userRepository;
+    private final ItineraryRepository itineraryRepository;
 
     public TransportCompanyCommandServiceImpl(
             TransportCompanyRepository transportCompanyRepository,
+            ItineraryRepository itineraryRepository,
             UserRepository userRepository) {
         this.transportCompanyRepository = transportCompanyRepository;
         this.userRepository=userRepository;
+        this.itineraryRepository = itineraryRepository;
     }
 
     @Override
@@ -247,6 +253,46 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
         transportCompany.getSchedules().add(newSchedule);  // Asegúrate de añadir el nuevo schedule a la lista del transportCompany
         transportCompanyRepository.save(transportCompany);  // Guardamos el TransportCompany que cascada los cambios a Schedules y DepartureSchedules
         return Optional.of(newSchedule);
+    }
+
+    @Override
+    public Optional<Itinerary> handle(CreateItineraryWithStopsCommand command) {
+        Optional<User> userOpt = userRepository.findById((long) command.user());
+        if (userOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Optional<TransportCompany> transportCompanyOpt = transportCompanyRepository.findById(userOpt.get().getTransportCompany().getId());
+        if (transportCompanyOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        TransportCompany transportCompany = transportCompanyOpt.get();
+        List<Stop> stops = new ArrayList<>();
+
+        Itinerary newItinerary = Itinerary.builder()
+                .startTime(command.startTime())
+                .endTime(command.endTime())
+                .stops(stops)
+                .transportCompany(transportCompany)
+                .user(command.user())
+                .build();
+
+        for (StopCommand stopCommand : command.stops()) {
+            Stop stop = Stop.builder()
+                    .itinerary(newItinerary)
+                    .latitude(stopCommand.latitude())
+                    .longitude(stopCommand.longitude())
+                    .name(stopCommand.name())
+                    .user(stopCommand.userId())
+                    .build();
+            stops.add(stop);
+        }
+        Itinerary savedItinerary = itineraryRepository.save(newItinerary);
+        transportCompany.setItinerary(savedItinerary);
+        transportCompanyRepository.save(transportCompany);
+
+        return Optional.of(newItinerary);
     }
 
 

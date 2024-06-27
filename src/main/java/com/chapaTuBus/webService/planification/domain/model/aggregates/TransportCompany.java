@@ -7,6 +7,7 @@ import com.chapaTuBus.webService.planification.domain.model.commands.departureSc
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.DeleteDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.ModifyDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.itinerary.CreateItineraryWithStopsCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleWithDepartureSchedulesCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.transportCompany.CreateTransportCompanyCommand;
@@ -48,8 +49,7 @@ public class TransportCompany {
     @OneToOne(mappedBy = "transportCompany")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "itinerary_id")
+    @OneToOne(mappedBy = "transportCompany")
     private Itinerary itinerary;
 
     @OneToMany(mappedBy = "transportCompany", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -255,6 +255,25 @@ public class TransportCompany {
         return schedule;
     }
 
+    public Itinerary createNewItineraryWithStops(CreateItineraryWithStopsCommand command) {
+        Itinerary itinerary = Itinerary.builder()
+                .startTime(command.startTime())
+                .endTime(command.endTime())
+                .stops(command.stops().stream()
+                        .map(stopCommand -> Stop.builder()
+                                .name(stopCommand.name())
+                                .latitude(stopCommand.latitude())
+                                .longitude(stopCommand.longitude())
+                                .build())
+                        .collect(Collectors.toList()))
+                .transportCompany(this)
+                .user(command.user())
+                .build();
+
+        this.itinerary = itinerary;
+        return itinerary;
+    }
+
     public DepartureSchedule createNewDepartureSchedule(CreateDepartureScheduleCommand command) {
         Optional<Schedule> optionalSchedule = this.schedules.stream()
                 .filter(s -> s.getId().equals((long) command.scheduleId()))
@@ -290,6 +309,8 @@ public class TransportCompany {
             throw new IllegalArgumentException("Schedule not found with ID: " + command.scheduleId());
         }
     }
+
+
 
 
 }

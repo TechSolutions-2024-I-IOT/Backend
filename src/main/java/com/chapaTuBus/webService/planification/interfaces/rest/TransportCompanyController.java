@@ -10,6 +10,8 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.bus.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.departureSchedule.CreateDepartureScheduleResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.departureSchedule.DepartureScheduleCreatedResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.*;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.itinerary.CreateItineraryWithStopsResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.itinerary.ItineraryCreatedResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.AllTransportCompanyInformationResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CompleteTransportCompanyInformationResource;
@@ -19,7 +21,9 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.CreateDepartureScheduleCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.DepartureScheduleCreatedResourceFromEntityAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.itinerary.CreateItineraryWithStopsCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.*;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.itinerary.ItineraryCreatedResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.schedule.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.AllTransportCompanyInformationResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CompleteTransportCompanyInformationResoruceFromEntityAssembler;
@@ -225,6 +229,26 @@ public class TransportCompanyController {
         }
     }
 
+    @PostMapping("/new-itinerary-with-stops")
+    ResponseEntity<?> createNewDepartureSchedule(@RequestBody CreateItineraryWithStopsResource resource) {
+        try {
+            Optional<Itinerary> itinerary = transportCompanyCommandService.handle(
+                    CreateItineraryWithStopsCommandFromResourceAssembler.toCommand(resource)
+            );
+
+            if (itinerary.isPresent()) {
+                ItineraryCreatedResource response = ItineraryCreatedResourceFromEntityAssembler.toResourceFromEntity(itinerary.get());
+                return new ResponseEntity<>(response, HttpStatus.CREATED);
+            } else {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create the itinerary, check the provided data.");
+            }
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body("Failed to parse date or time: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("An error occurred: " + e.getMessage());
+        }
+    }
+
     @PostMapping("/register-driver")
     ResponseEntity<DriverRegisteredResource> registerDriver(@RequestBody RegisterDriverResource registerDriverResource){
 
@@ -283,9 +307,21 @@ public class TransportCompanyController {
         return departureSchedule.map(actualDepartureSchedule->
                         new ResponseEntity<>(DepartureScheduleCreatedResourceFromEntityAssembler.toResourceFromEntity(actualDepartureSchedule),CREATED))
                 .orElseGet(()->ResponseEntity.badRequest().build());
-
-
     }
+
+
+
+
+//    @PutMapping("/schedule-with-departures")
+//    public ResponseEntity<?> modifyScheduleAndDepartureSchedules(
+//            @RequestParam("userId") int userId,
+//            @RequestParam("scheduleId") int scheduleId,
+//            @RequestBody ModifyScheduleAndDepartureSchedulesResource resource) {
+//
+//            var modifyScheduleAndDepartureSchedulesCommand = ModifyScheduleAndDepartureSchedulesCommandFromResourceAssembler.toCommand(userId, scheduleId, resource);
+//
+//    }
+
 
     @PutMapping("/driver")
     public ResponseEntity<ModifiedDriverResource> modifyDriverByDriverId(
