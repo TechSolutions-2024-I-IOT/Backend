@@ -16,5 +16,6 @@ public interface TransportCompanyQueryService {
     Optional<Driver> handle(GetDriverByIdQuery query);
     List<Schedule> handle(GetAllSchedulesByUserIdQuery query);
     Optional<TransportCompany> handle(GetTransportCompanyInformationByIdQuery query);
+    Optional<TransportCompany> handle(GetTransportCompanyByUserIdQuery query);
     Optional<Schedule> handle(GetScheduleCompleteInformationByScheduleIdQuery query);
 }
