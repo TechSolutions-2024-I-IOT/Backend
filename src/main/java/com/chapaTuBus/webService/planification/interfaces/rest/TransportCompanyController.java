@@ -146,14 +146,14 @@ public class TransportCompanyController {
 
 
     @GetMapping("/unit-buses")
-    ResponseEntity<List<UnitBusCreatedResource>> getUnitBuses(@RequestParam(name = "userId") int userId) {
+    ResponseEntity<List<UnitBusInformationResource>> getUnitBuses(@RequestParam(name = "userId") int userId) {
 
         var getAllUnitBusesByUserIdQuery = new GetAllUnitBusesByUserIdQuery(userId);
 
         var unitBuses = transportCompanyQueryService.handle(getAllUnitBusesByUserIdQuery);
 
         var unitBusesRegisteredResource = unitBuses.stream()
-                .map(UnitBusCreatedResourceFromEntityAssembler::toResourceFromEntity)
+                .map(UnitBusInformationResourceFromEntityAssembler::toResourceFromEntity)
                 .toList();
 
         return ResponseEntity.ok(unitBusesRegisteredResource);
