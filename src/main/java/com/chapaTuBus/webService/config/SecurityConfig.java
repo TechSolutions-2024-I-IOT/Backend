@@ -47,7 +47,7 @@ public class SecurityConfig {
                                 "api/v1/weight-sensor/**",
                                 "/api/v1/gps-tracker/**",
                                 "api/v1/transport-company/completeInformationById",
-                                "/api/v1/payment"
+                                "/api/v1/payment/**"
                         ).permitAll()
                         .requestMatchers("/api/v1/transport-company/all").permitAll()
                         .requestMatchers("/api/v1/transport-company/**").authenticated()
