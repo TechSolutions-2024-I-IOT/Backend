@@ -4,7 +4,8 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.itinera
 
 import java.util.List;
 
-public record CreateItineraryWithStopsResource(
+public record ModifiedItineraryWithStopsResource(
+        Long id,
         String startTime,
         String endTime,
         List<StopDto> stops,

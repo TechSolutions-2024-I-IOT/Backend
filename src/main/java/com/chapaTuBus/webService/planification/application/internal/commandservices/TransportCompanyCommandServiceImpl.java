@@ -9,6 +9,7 @@ import com.chapaTuBus.webService.planification.domain.model.commands.driver.Dele
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.ModifyDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.driver.RegisterDriverCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.itinerary.CreateItineraryWithStopsCommand;
+import com.chapaTuBus.webService.planification.domain.model.commands.itinerary.ModifyItineraryWithStopsCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.itinerary.StopCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleCommand;
 import com.chapaTuBus.webService.planification.domain.model.commands.schedule.CreateScheduleWithDepartureSchedulesCommand;
@@ -26,6 +27,8 @@ import com.chapaTuBus.webService.userAccount.infraestructure.jpa.repositories.Us
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -295,6 +298,36 @@ public class TransportCompanyCommandServiceImpl implements TransportCompanyComma
         return Optional.of(newItinerary);
     }
 
+    @Override
+    public Optional<Itinerary> handle(ModifyItineraryWithStopsCommand command) {
+
+        Optional<Itinerary> itineraryOpt = itineraryRepository.findById(command.itineraryId());
+        if (itineraryOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Itinerary itinerary = itineraryOpt.get();
+
+        itinerary.setStartTime(LocalTime.parse(command.startTime(), DateTimeFormatter.ofPattern("HH:mm")));
+        itinerary.setEndTime(LocalTime.parse(command.endTime(), DateTimeFormatter.ofPattern("HH:mm")));
+
+        List<Stop> newStops = command.stops().stream().map(stopCommand -> Stop.builder()
+                        .name(stopCommand.name())
+                        .latitude(stopCommand.latitude())
+                        .longitude(stopCommand.longitude())
+                        .itinerary(itinerary)
+                        .user(stopCommand.userId())
+                        .build())
+                .collect(Collectors.toList());
+
+        itinerary.getStops().clear();
+        itinerary.getStops().addAll(newStops);
+
+        itineraryRepository.save(itinerary);
+
+        return Optional.of(itinerary);
+
+    }
 
 
     @Override

@@ -19,7 +19,7 @@ public class CreateItineraryWithStopsCommandFromResourceAssembler {
                         dto.latitude(),
                         dto.longitude(),
                         null,
-                        resource.user()
+                        resource.userId()
                 ))
                 .collect(Collectors.toList());
 
@@ -27,7 +27,7 @@ public class CreateItineraryWithStopsCommandFromResourceAssembler {
                 LocalTime.parse(resource.startTime(), timeFormatter),
                 LocalTime.parse(resource.endTime(), timeFormatter),
                 stopCommands,
-                resource.user()
+                resource.userId()
         );
     }
 }

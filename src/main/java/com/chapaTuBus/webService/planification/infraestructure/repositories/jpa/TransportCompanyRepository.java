@@ -64,4 +64,7 @@ public interface TransportCompanyRepository extends JpaRepository<TransportCompa
 
     Optional<TransportCompany> findByUserId(Long userId);
 
+    @Query("SELECT it FROM Itinerary it WHERE it.id = :userId")
+    Optional<Itinerary> findItineraryByUserId(@Param("userId") int userId);
+
 }
