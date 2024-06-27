@@ -12,6 +12,7 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.departu
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.driver.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.itinerary.CreateItineraryWithStopsResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.itinerary.ItineraryCreatedResource;
+import com.chapaTuBus.webService.planification.interfaces.rest.resources.itinerary.ItineraryWithStopsResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.schedule.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.AllTransportCompanyInformationResource;
 import com.chapaTuBus.webService.planification.interfaces.rest.resources.transportCompany.CompleteTransportCompanyInformationResource;
@@ -21,9 +22,8 @@ import com.chapaTuBus.webService.planification.interfaces.rest.resources.unitBus
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.bus.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.CreateDepartureScheduleCommandFromResourceAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.departureSchedule.DepartureScheduleCreatedResourceFromEntityAssembler;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.itinerary.CreateItineraryWithStopsCommandFromResourceAssembler;
+import com.chapaTuBus.webService.planification.interfaces.rest.transform.itinerary.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.driver.*;
-import com.chapaTuBus.webService.planification.interfaces.rest.transform.itinerary.ItineraryCreatedResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.schedule.*;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.AllTransportCompanyInformationResourceFromEntityAssembler;
 import com.chapaTuBus.webService.planification.interfaces.rest.transform.transportCompany.CompleteTransportCompanyInformationResoruceFromEntityAssembler;
@@ -117,6 +117,18 @@ public class TransportCompanyController {
 
         return scheduleResource.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
+    }
+
+    @GetMapping("/itinerary-with-stops")
+    ResponseEntity<ItineraryWithStopsResource> getItineraryById(@RequestParam("userId") int userId)
+    {
+        var getItineraryByIdQuery = new GetItineraryByUserIdQuery(userId);
+
+        var itinerary = transportCompanyQueryService.handle(getItineraryByIdQuery);
+
+        var itineraryResource = itinerary.map(ItineraryWithStopsResourceFromEntityAssembler::toResourceFromEntity);
+
+        return itineraryResource.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 
@@ -309,8 +321,18 @@ public class TransportCompanyController {
                 .orElseGet(()->ResponseEntity.badRequest().build());
     }
 
+    @PutMapping("/itinerary-with-stops")
+    public ResponseEntity<?> modifyItineraryWithStops(
+            @RequestParam("userId") int userId,
+            @RequestBody ItineraryWithStopsResource resource) {
 
+        var modifyItineraryWithStopsCommand = ModifyItineraryWithStopsCommandFromResourceAssembler.toCommand(userId, resource);
+        var itinerary = transportCompanyCommandService.handle(modifyItineraryWithStopsCommand);
 
+        return itinerary.map(modifiedItinerary ->
+                        ResponseEntity.ok(ModifiedItineraryWithStopsResourceFromEntityAssembler.toResourceFromEntity(modifiedItinerary)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
 //    @PutMapping("/schedule-with-departures")
 //    public ResponseEntity<?> modifyScheduleAndDepartureSchedules(

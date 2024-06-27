@@ -18,4 +18,5 @@ public interface TransportCompanyQueryService {
     Optional<TransportCompany> handle(GetTransportCompanyInformationByIdQuery query);
     Optional<TransportCompany> handle(GetTransportCompanyByUserIdQuery query);
     Optional<Schedule> handle(GetScheduleCompleteInformationByScheduleIdQuery query);
+    Optional<Itinerary> handle(GetItineraryByUserIdQuery query);
 }
