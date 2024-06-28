@@ -48,6 +48,7 @@ public class SecurityConfig {
                                 "/api/v1/gps-tracker/**",
                                 "api/v1/transport-company/completeInformationById",
                                 "api/v1/transport-company/byUserId",
+                                "/api/v1/transport-company/new-itinerary-with-stops",
                                 "/api/v1/payment/**"
                         ).permitAll()
                         .requestMatchers("/api/v1/transport-company/all").permitAll()
